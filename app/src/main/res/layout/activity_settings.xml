@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
-            android:text="Темная тема"
+            android:text="@string/dark_theme"
             android:layout_gravity="start"
             android:textColor="@color/yandex_black"
             android:textSize="@dimen/text_medium" />
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
-            android:text="Поделиться приложением"
+            android:text="@string/share_the_app"
             android:layout_gravity="start"
             android:textColor="@color/yandex_black"
             android:textSize="@dimen/text_medium" />
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
-            android:text="Написать в поддержку"
+            android:text="@string/contact_support"
             android:layout_gravity="start"
             android:textColor="@color/yandex_black"
             android:textSize="@dimen/text_medium" />
