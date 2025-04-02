@@ -20,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
-            shareIntent.putExtra(EXTRA_TEXT, R.string.share_url)
+            shareIntent.putExtra(EXTRA_TEXT, getString(R.string.share_url))
             startActivity(Intent.createChooser(shareIntent, "Share"))
         }
 
@@ -28,9 +28,9 @@ class SettingsActivity : AppCompatActivity() {
         contactButton.setOnClickListener {
             val contactIntent = Intent(Intent.ACTION_SENDTO)
             contactIntent.data = "mailto:".toUri()
-            contactIntent.putExtra(EXTRA_EMAIL, arrayOf(R.string.my_email))
-            contactIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.message_subject)
-            contactIntent.putExtra(EXTRA_TEXT, R.string.message)
+            contactIntent.putExtra(EXTRA_EMAIL, arrayOf(getString(R.string.my_email)))
+            contactIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.message_subject))
+            contactIntent.putExtra(EXTRA_TEXT, getString(R.string.message))
             startActivity(contactIntent)
         }
 
