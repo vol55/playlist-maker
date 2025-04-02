@@ -4,4 +4,15 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
+    <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker">
+        <item name="backgroundPrimary">@color/yandex_black</item>
+        <item name="backgroundPrimaryVariant">@color/yandex_black</item>
+        <item name="buttonPrimary">@color/white</item>
+        <item name="textPrimary">@color/white</item>
+        <item name="textPrimaryVariant">@color/yandex_black</item>
+        <item name="iconPrimary">@color/white</item>
+        <item name="switcherPrimary">@color/yandex_blue</item>
+        <item name="switcherPrimaryVariant">@color/yandex_light_blue</item>
+    </style>
 </resources>
