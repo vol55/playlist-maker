@@ -31,10 +31,11 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/share_app_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:text="@string/share_the_app"
+            android:text="@string/share_app"
             style="@style/SettingsItemText" />
         <TextView
             app:drawableEndCompat="@drawable/share"
@@ -42,6 +43,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/contact_support_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -53,6 +55,7 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/terms_of_use_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
