@@ -8,4 +8,7 @@
     <attr name="switcherPrimaryVariant" format="color"/>
     <attr name="backgroundPrimaryVariant" format="color"/>
     <attr name="textPrimary" format="color"/>
+
+    <attr name="textField" format="color"/>
+    <attr name="onTextField" format="color"/>
 </resources>

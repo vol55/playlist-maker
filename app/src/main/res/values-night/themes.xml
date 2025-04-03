@@ -14,5 +14,8 @@
         <item name="iconPrimary">@color/white</item>
         <item name="switcherPrimary">@color/yandex_blue</item>
         <item name="switcherPrimaryVariant">@color/yandex_light_blue</item>
+
+        <item name="textField">@color/white</item>
+        <item name="onTextField">@color/yandex_black</item>
     </style>
 </resources>
