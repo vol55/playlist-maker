@@ -16,6 +16,7 @@ tools:context=".SearchActivity">
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
+            android:id="@+id/back_button"
             android:src="@drawable/back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

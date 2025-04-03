@@ -24,6 +24,11 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+        val backButton = findViewById<ImageView>(R.id.back_button)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
         val searchInput = findViewById<EditText>(R.id.input_field)
         val clearButton = findViewById<ImageView>(R.id.clear_button)
 
