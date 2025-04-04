@@ -9,27 +9,30 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:text="@string/playlist_maker"
-        android:textColor="@color/white"
-        style="@style/HeadlineStyle" />
+
+    <com.google.android.material.appbar.MaterialToolbar
+        style="@style/ToolbarStyle"
+        android:layout_marginBottom="@dimen/space_8dp"
+        app:title="@string/playlist_maker"
+        app:titleTextAppearance="@style/ToolbarTextAppearance"
+        app:titleTextColor="@color/white" />
 
     <Button
         android:id="@+id/search_button"
+        style="@style/LargeButtonStyle"
         android:text="@string/search"
-        app:icon="@drawable/search"
-        style="@style/LargeButtonStyle" />
+        app:icon="@drawable/search" />
 
     <Button
         android:id="@+id/library_button"
+        style="@style/LargeButtonStyle"
         android:text="@string/library"
-        app:icon="@drawable/library"
-        style="@style/LargeButtonStyle" />
+        app:icon="@drawable/library" />
 
     <Button
         android:id="@+id/settings_button"
+        style="@style/LargeButtonStyle"
         android:text="@string/settings"
-        app:icon="@drawable/settings"
-        style="@style/LargeButtonStyle" />
+        app:icon="@drawable/settings" />
 
 </LinearLayout>
