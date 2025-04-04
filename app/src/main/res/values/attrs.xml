@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="buttonPrimary" format="color"/>
-    <attr name="textPrimaryVariant" format="color"/>
-    <attr name="iconPrimary" format="reference"/>
-    <attr name="backgroundPrimary" format="color"/>
-    <attr name="switcherPrimary" format="color"/>
-    <attr name="switcherPrimaryVariant" format="color"/>
-    <attr name="backgroundPrimaryVariant" format="color"/>
-    <attr name="textPrimary" format="color"/>
+    <attr name="buttonPrimary" format="color" />
+    <attr name="textPrimaryVariant" format="color" />
+    <attr name="iconPrimary" format="reference" />
+    <attr name="backgroundPrimary" format="color" />
+    <attr name="switcherThumbTint" format="color" />
+    <attr name="switcherTrackTint" format="color" />
+    <attr name="backgroundPrimaryVariant" format="color" />
+    <attr name="textPrimary" format="color" />
 
-    <attr name="textField" format="color"/>
-    <attr name="onTextField" format="color"/>
+    <attr name="textField" format="color" />
+    <attr name="onTextField" format="color" />
 </resources>
