@@ -4,67 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="?attr/backgroundPrimary"
+    android:orientation="vertical"
     tools:context=".SettingsActivity">
 
-    <TextView
-        android:text="@string/settings"
-        android:textColor="?attr/textPrimary"
-        style="@style/HeadlineStyle" />
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/settings_activity_toolbar"
+        style="@style/ToolbarStyle"
+        android:layout_marginBottom="@dimen/space_8dp"
+        app:navigationContentDescription="@string/back"
+        app:navigationIcon="@drawable/back"
+        app:navigationIconTint="?attr/textPrimary"
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/ToolbarTextAppearance"
+        app:titleTextColor="?attr/textPrimary" />
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        style="@style/SettingOptionWithIcon"
+        android:text="@string/dark_theme"
+        app:thumbTint="?attr/switcherThumbTint"
+        app:trackTint="?attr/switcherTrackTint" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8dp">
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/share_list_option"
+        style="@style/SettingOptionWithIcon"
+        android:drawableEnd="@drawable/share"
+        android:text="@string/share_app" />
 
-        <TextView
-            android:text="@string/dark_theme"
-            style="@style/SettingsItemText" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contact_support_list_option"
+        style="@style/SettingOptionWithIcon"
+        android:drawableEnd="@drawable/support"
+        android:text="@string/contact_support" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            style="@style/SettingsItemIcon"
-            android:layout_marginVertical="0dp"
-            app:thumbTint="?attr/switcherPrimary"
-            app:trackTint="?attr/switcherPrimaryVariant" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/share_app_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="@string/share_app"
-            style="@style/SettingsItemText" />
-        <TextView
-            app:drawableEndCompat="@drawable/share"
-            style="@style/SettingsItemIcon" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/contact_support_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="@string/contact_support"
-            style="@style/SettingsItemText" />
-        <TextView
-            app:drawableEndCompat="@drawable/support"
-            style="@style/SettingsItemIcon" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/terms_of_use_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="@string/terms_of_use"
-            style="@style/SettingsItemText" />
-
-        <TextView
-            app:drawableEndCompat="@drawable/arrow_forward"
-            style="@style/SettingsItemIcon" />
-    </FrameLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/terms_of_use_list_option"
+        style="@style/SettingOptionWithIcon"
+        android:drawableEnd="@drawable/arrow_forward"
+        android:text="@string/terms_of_use" />
 
 </LinearLayout>
