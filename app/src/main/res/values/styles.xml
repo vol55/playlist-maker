@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="LargeButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
@@ -17,29 +18,27 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
-    <style name="SettingsItemText">
-        <item name="android:layout_width">wrap_content</item>
+    <style name="SettingOptionWithIcon">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/space_16dp</item>
-        <item name="android:layout_gravity">start</item>
-        <item name="android:textColor">?attr/textPrimary</item>
-        <item name="android:textSize">@dimen/text_medium</item>
+        <item name="android:paddingHorizontal">@dimen/space_16dp</item>
+        <item name="android:paddingVertical">@dimen/space_20dp</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">?attr/textPrimary</item>
+        <item name="android:drawableTint">?attr/textPrimary</item>
     </style>
 
-    <style name="SettingsItemIcon">
-        <item name="android:layout_width">wrap_content</item>
+    <style name="ToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginHorizontal">@dimen/space_16dp</item>
-        <item name="android:layout_marginVertical">@dimen/space_16dp</item>
-        <item name="drawableTint">?attr/iconPrimary</item>
-        <item name="android:layout_gravity">end</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="contentInsetStart">@dimen/space_16dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="titleMarginStart">0dp</item>
     </style>
 
-    <style name="HeadlineStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/space_16dp</item>
+    <style name="ToolbarTextAppearance">
         <item name="android:textSize">@dimen/text_header_small</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
