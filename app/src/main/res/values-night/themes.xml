@@ -12,8 +12,8 @@
         <item name="textPrimary">@color/white</item>
         <item name="textPrimaryVariant">@color/yandex_black</item>
         <item name="iconPrimary">@color/white</item>
-        <item name="switcherPrimary">@color/yandex_blue</item>
-        <item name="switcherPrimaryVariant">@color/yandex_light_blue</item>
+        <item name="switcherThumbTint">@color/yandex_blue</item>
+        <item name="switcherTrackTint">@color/yandex_light_blue</item>
 
         <item name="textField">@color/white</item>
         <item name="onTextField">@color/yandex_black</item>
