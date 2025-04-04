@@ -3,12 +3,13 @@ package com.example.playlistmaker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.EXTRA_EMAIL
-import android.net.Uri
 import android.content.Intent.EXTRA_TEXT
+import android.content.res.Configuration
 import android.os.Bundle
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -16,15 +17,27 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val shareButton = findViewById<FrameLayout>(R.id.share_app_button)
-        shareButton.setOnClickListener {
+        val isDarkTheme =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+        val toolbar = findViewById<MaterialToolbar>(R.id.settings_activity_toolbar)
+        toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        if (isDarkTheme) {
+            toolbar.navigationIcon = null
+        }
+
+        val shareListOption = findViewById<MaterialTextView>(R.id.share_list_option)
+        shareListOption.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(EXTRA_TEXT, getString(R.string.share_url))
             startActivity(Intent.createChooser(shareIntent, "Share"))
         }
 
-        val contactButton = findViewById<FrameLayout>(R.id.contact_support_button)
+        val contactButton = findViewById<MaterialTextView>(R.id.contact_support_list_option)
         contactButton.setOnClickListener {
             val contactIntent = Intent(Intent.ACTION_SENDTO)
             contactIntent.data = "mailto:".toUri()
@@ -34,9 +47,10 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(contactIntent)
         }
 
-        val termsOfUseButton = findViewById<FrameLayout>(R.id.terms_of_use_button)
+        val termsOfUseButton = findViewById<MaterialTextView>(R.id.terms_of_use_list_option)
         termsOfUseButton.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, getString(R.string.terms_of_use_url).toUri())
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, getString(R.string.terms_of_use_url).toUri())
             startActivity(browserIntent)
         }
     }
