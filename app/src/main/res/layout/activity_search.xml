@@ -1,68 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/main"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:background="?attr/backgroundPrimary"
-tools:context=".SearchActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundPrimary"
+    android:orientation="vertical"
+    tools:context=".SearchActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables">
-
-        <ImageView
-            android:id="@+id/back_button"
-            android:src="@drawable/back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/space_16dp"
-            app:tint="?attr/textPrimary" />
-        <TextView
-            android:text="@string/search"
-            android:textColor="?attr/textPrimary"
-            style="@style/HeadlineStyle" />
-
-    </LinearLayout>
-
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/search_activity_toolbar"
+        style="@style/ToolbarStyle"
+        android:layout_marginBottom="@dimen/space_8dp"
+        app:navigationContentDescription="@string/back"
+        app:navigationIcon="@drawable/back"
+        app:navigationIconTint="?attr/textPrimary"
+        app:title="@string/search"
+        app:titleTextAppearance="@style/ToolbarTextAppearance"
+        app:titleTextColor="?attr/textPrimary" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/space_16dp" >
+        android:paddingHorizontal="@dimen/space_16dp">
 
         <EditText
             android:id="@+id/input_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
-            android:padding="@dimen/space_16dp"
             android:background="@drawable/rounded_background"
             android:drawableStart="@drawable/search"
-            android:drawableTint="?attr/onTextField"
             android:drawablePadding="@dimen/space_8dp"
-            android:textColor="@color/yandex_black"
-            android:textColorHint="?attr/onTextField"
+            android:drawableTint="?attr/onTextField"
+            android:ellipsize="end"
             android:hint="@string/search"
+            android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
-            android:ellipsize="end"
-            android:imeOptions="actionSearch" />
+            android:padding="@dimen/space_16dp"
+            android:textColor="@color/yandex_black"
+            android:textColorHint="?attr/onTextField"
+            android:textCursorDrawable="@drawable/textedit_cursor" />
 
         <ImageView
             android:id="@+id/clear_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/clear_input"
-            android:src="@drawable/clear_icon"
-            app:tint="?attr/onTextField"
-            android:padding="@dimen/space_12dp"
             android:layout_gravity="end|center_vertical"
-            android:visibility="gone" />
+            android:contentDescription="@string/clear_input"
+            android:padding="@dimen/space_12dp"
+            android:src="@drawable/clear_icon"
+            android:visibility="gone"
+            app:tint="?attr/onTextField" />
 
     </FrameLayout>
 
