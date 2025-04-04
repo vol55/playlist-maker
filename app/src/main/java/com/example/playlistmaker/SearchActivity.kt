@@ -10,6 +10,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.appbar.MaterialToolbar
 
 
 class SearchActivity : AppCompatActivity() {
@@ -24,8 +25,8 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val backButton = findViewById<ImageView>(R.id.back_button)
-        backButton.setOnClickListener {
+        val toolbar = findViewById<MaterialToolbar>(R.id.search_activity_toolbar)
+        toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
