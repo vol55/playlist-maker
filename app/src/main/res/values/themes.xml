@@ -5,5 +5,17 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" />
+    <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker">
+        <item name="backgroundPrimary">@color/white</item>
+        <item name="backgroundPrimaryVariant">@color/yandex_blue</item>
+        <item name="buttonPrimary">@color/white</item>
+        <item name="textPrimary">@color/yandex_black</item>
+        <item name="textPrimaryVariant">@color/yandex_black</item>
+        <item name="iconPrimary">@color/yandex_gray</item>
+        <item name="switcherThumbTint">@color/yandex_gray</item>
+        <item name="switcherTrackTint">@color/yandex_light_gray</item>
+
+        <item name="textField">@color/yandex_light_gray</item>
+        <item name="onTextField">@color/yandex_gray</item>
+    </style>
 </resources>

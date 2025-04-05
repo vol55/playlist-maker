@@ -4,101 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundPrimary"
     android:orientation="vertical"
     tools:context=".SettingsActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_medium"
-        android:text="@string/settings"
-        android:textColor="@color/yandex_black"
-        android:textSize="@dimen/text_header_small" />
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/settings_activity_toolbar"
+        style="@style/ToolbarStyle"
+        android:layout_marginBottom="@dimen/space_8dp"
+        app:navigationContentDescription="@string/back"
+        app:navigationIcon="@drawable/back"
+        app:navigationIconTint="?attr/textPrimary"
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/ToolbarTextAppearance"
+        app:titleTextColor="?attr/textPrimary" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small">
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        style="@style/SettingOptionWithIcon"
+        android:text="@string/dark_theme"
+        app:thumbTint="?attr/switcherThumbTint"
+        app:trackTint="?attr/switcherTrackTint" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
-            android:text="@string/dark_theme"
-            android:layout_gravity="start"
-            android:textColor="@color/yandex_black"
-            android:textSize="@dimen/text_medium" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/share_list_option"
+        style="@style/SettingOptionWithIcon"
+        android:drawableEnd="@drawable/share"
+        android:text="@string/share_app" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_medium"
-            android:layout_gravity="end"
-            app:thumbTint="@color/yandex_gray"
-            app:trackTint="@color/yandex_light_gray" />
-    </FrameLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/contact_support_list_option"
+        style="@style/SettingOptionWithIcon"
+        android:drawableEnd="@drawable/support"
+        android:text="@string/contact_support" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
-            android:text="@string/share_the_app"
-            android:layout_gravity="start"
-            android:textColor="@color/yandex_black"
-            android:textSize="@dimen/text_medium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
-            android:layout_gravity="end"
-            app:drawableEndCompat="@drawable/share"
-            app:drawableTint="@color/yandex_gray" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
-            android:text="@string/contact_support"
-            android:layout_gravity="start"
-            android:textColor="@color/yandex_black"
-            android:textSize="@dimen/text_medium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
-            android:layout_gravity="end"
-            app:drawableEndCompat="@drawable/support"
-            app:drawableTint="@color/yandex_gray" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
-            android:text="@string/terms_of_use"
-            android:layout_gravity="start"
-            android:textColor="@color/yandex_black"
-            android:textSize="@dimen/text_medium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
-            android:layout_gravity="end"
-            app:drawableEndCompat="@drawable/arrow_forward"
-            app:drawableTint="@color/yandex_gray" />
-    </FrameLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/terms_of_use_list_option"
+        style="@style/SettingOptionWithIcon"
+        android:drawableEnd="@drawable/arrow_forward"
+        android:text="@string/terms_of_use" />
 
 </LinearLayout>
