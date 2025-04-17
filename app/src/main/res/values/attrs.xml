@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="foreground" format="color" />
+    <attr name="foregroundVariant" format="color" />
+
     <attr name="buttonPrimary" format="color" />
     <attr name="textPrimaryVariant" format="color" />
     <attr name="iconPrimary" format="reference" />
