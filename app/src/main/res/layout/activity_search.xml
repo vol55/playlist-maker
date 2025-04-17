@@ -39,7 +39,9 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
-            android:padding="@dimen/space_16dp"
+            android:paddingHorizontal="@dimen/space_12dp"
+            android:paddingVertical="@dimen/space_8dp"
+
             android:textColor="@color/yandex_black"
             android:textColorHint="?attr/onTextField"
             android:textCursorDrawable="@drawable/textedit_cursor" />
@@ -56,5 +58,14 @@
             app:tint="?attr/onTextField" />
 
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTrackList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/space_20dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/track_item" />
 
 </LinearLayout>
