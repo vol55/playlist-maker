@@ -18,5 +18,6 @@
     <string name="clear_input">clear input</string>
     <string name="back">назад</string>
     <string name="forward">forward</string>
+    <string name="cover">cover</string>
 
 </resources>
