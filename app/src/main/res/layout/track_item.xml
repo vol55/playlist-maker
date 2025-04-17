@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="16dp">
+
+
+<ImageView
+        android:id="@+id/ivArtwork"
+        android:layout_width="@dimen/image_small"
+        android:layout_height="@dimen/image_small"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/space_8dp"
+        android:layout_marginEnd="@dimen/space_16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTrackName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text=""
+            android:textColor="?attr/foreground"
+            android:fontFamily="@font/ys_display_regular"
+            android:textSize="@dimen/text_size_medium"/>
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text=""
+            android:textColor="?attr/foregroundVariant"
+            android:fontFamily="@font/ys_display_regular"
+            android:textSize="@dimen/text_size_small"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivArrow"
+        android:layout_width="@dimen/space_8dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/forward"
+        android:src="@drawable/arrow_forward"
+        app:tint="?attr/foregroundVariant" />
+
+</LinearLayout>
