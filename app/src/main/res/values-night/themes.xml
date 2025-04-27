@@ -6,6 +6,9 @@
     </style>
 
     <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker">
+        <item name="foreground">@color/white</item>
+        <item name="foregroundVariant">@color/white</item>
+
         <item name="backgroundPrimary">@color/yandex_black</item>
         <item name="backgroundPrimaryVariant">@color/yandex_black</item>
         <item name="buttonPrimary">@color/white</item>
