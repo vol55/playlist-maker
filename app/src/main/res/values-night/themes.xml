@@ -20,5 +20,11 @@
 
         <item name="textField">@color/white</item>
         <item name="onTextField">@color/yandex_black</item>
+
+        <item name="noNetworkImage">@drawable/no_network_dark</item>
+        <item name="noResultsImage">@drawable/no_results_dark</item>
+
+        <item name="retryButtonBackground">@color/white</item>
+
     </style>
 </resources>

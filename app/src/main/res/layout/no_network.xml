@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llNoNetwork"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/space_24dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <ImageView
+        android:layout_width="@dimen/image_medium"
+        android:layout_height="@dimen/image_medium"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:contentDescription="@string/something_went_wrong"
+        android:scaleType="centerCrop"
+        android:src="?attr/noNetworkImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:text="@string/no_network_message"
+        android:textAlignment="center"
+        android:textColor="?attr/foreground"
+        android:textSize="@dimen/text_size_large" />
+
+    <Button
+        android:id="@+id/bvNoNetworkRetry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="?attr/retryButtonBackground"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/refresh"
+        android:textAllCaps="false"
+        android:textColor="?attr/backgroundPrimary"
+        android:textSize="14sp"
+        app:cornerRadius="54dp" />
+
+</LinearLayout>

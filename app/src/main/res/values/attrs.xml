@@ -14,4 +14,10 @@
 
     <attr name="textField" format="color" />
     <attr name="onTextField" format="color" />
+
+    <attr name="noNetworkImage" format="reference" />
+    <attr name="noResultsImage" format="reference" />
+
+    <attr name="retryButtonBackground" format="color" />
+
 </resources>

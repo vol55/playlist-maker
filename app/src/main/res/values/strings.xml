@@ -19,5 +19,9 @@
     <string name="back">назад</string>
     <string name="forward">forward</string>
     <string name="cover">cover</string>
+    <string name="something_went_wrong">something went wrong :(</string>
+    <string name="no_network_message">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="refresh">Обновить</string>
+    <string name="no_results_message">Ничего не нашлось</string>
 
 </resources>

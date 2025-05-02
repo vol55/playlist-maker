@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="space_24dp">24dp</dimen>
     <dimen name="space_20dp">20dp</dimen>
     <dimen name="space_16dp">16dp</dimen>
     <dimen name="space_12dp">12dp</dimen>
     <dimen name="space_8dp">8dp</dimen>
 
     <dimen name="text_header_small">22sp</dimen>
+    <dimen name="text_size_large">19sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_small">11sp</dimen>
 
     <dimen name="border_radius">16dp</dimen>
 
     <dimen name="image_small">45dp</dimen>
+    <dimen name="image_medium">120dp</dimen>
 
 </resources>
