@@ -141,6 +141,8 @@ class SearchActivity : AppCompatActivity() {
             noNetworkView.visibility = View.GONE
             noResultsView.visibility = View.GONE
         }
+
+        searchInput.requestFocus()
     }
 
     private fun showSearchResults(searchQuery: String) {
