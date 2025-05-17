@@ -5,7 +5,6 @@ import android.content.Intent.EXTRA_EMAIL
 import android.content.Intent.EXTRA_TEXT
 import android.content.res.Configuration
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.google.android.material.appbar.MaterialToolbar
@@ -30,7 +29,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.smThemeSwitcher)
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
             (applicationContext as App).switchTheme(checked)
         }
 
