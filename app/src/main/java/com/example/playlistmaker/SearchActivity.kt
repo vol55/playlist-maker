@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.Call
@@ -90,10 +91,9 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchFieldValue = s.toString()
-                clearButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
-                historyView.visibility =
-                    if (searchInput.hasFocus() && s?.isEmpty() == true && !historyTracks.isEmpty()) View.VISIBLE else View.GONE
-
+                clearButton.isVisible = if (s.isNullOrEmpty()) false else true
+                historyView.isVisible =
+                    searchInput.hasFocus() && s?.isEmpty() == true && !historyTracks.isEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -120,14 +120,14 @@ class SearchActivity : AppCompatActivity() {
                 historyTracks.clear()
                 historyTracks.addAll(history.getTracks())
                 trackHistoryAdapter.notifyDataSetChanged()
-                historyView.visibility = View.VISIBLE
+                historyView.isVisible = true
             } else {
-                historyView.visibility = View.GONE
+                historyView.isVisible = false
             }
         }
 
         clearHistoryButton.setOnClickListener {
-            historyView.visibility = View.GONE
+            historyView.isVisible = false
             history.clear()
             historyTracks.clear()
             trackHistoryAdapter.notifyDataSetChanged()
@@ -138,8 +138,8 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard(searchInput)
             tracks.clear()
             trackAdapter.notifyDataSetChanged()
-            noNetworkView.visibility = View.GONE
-            noResultsView.visibility = View.GONE
+            noNetworkView.isVisible = false
+            noResultsView.isVisible = false
         }
 
         searchInput.requestFocus()
@@ -150,8 +150,8 @@ class SearchActivity : AppCompatActivity() {
             return
         }
         tracks.clear()
-        noNetworkView.visibility = View.GONE
-        noResultsView.visibility = View.GONE
+        noNetworkView.isVisible = false
+        noResultsView.isVisible = false
 
         iTunesService.search(searchQuery)
             .enqueue(object : Callback<TracksResponse> {
@@ -176,7 +176,7 @@ class SearchActivity : AppCompatActivity() {
                                 }
                             )
                         } else {
-                            noResultsView.visibility = View.VISIBLE
+                            noResultsView.isVisible = true
                         }
                         trackAdapter.notifyDataSetChanged()
                     }
@@ -186,7 +186,7 @@ class SearchActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                     tracks.clear()
                     trackAdapter.notifyDataSetChanged()
-                    noNetworkView.visibility = View.VISIBLE
+                    noNetworkView.isVisible = true
                 }
             })
     }
