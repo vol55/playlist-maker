@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.EXTRA_EMAIL
 import android.content.Intent.EXTRA_TEXT
@@ -9,10 +8,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -27,6 +26,12 @@ class SettingsActivity : AppCompatActivity() {
 
         if (isDarkTheme) {
             toolbar.navigationIcon = null
+        }
+
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.smThemeSwitcher)
+        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
 
         val shareListOption = findViewById<MaterialTextView>(R.id.share_list_option)

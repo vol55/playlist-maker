@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llSearchHistory"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="0dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <TextView
+        style="@style/Header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="@string/search_history"
+        android:textAlignment="center" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTrackHistoryList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="@dimen/space_20dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/track_item" />
+
+    <Button
+        android:id="@+id/bvClearTrackHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_12dp"
+        android:backgroundTint="?attr/retryButtonBackground"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/clear_history"
+        android:textAllCaps="false"
+        android:textColor="?attr/backgroundPrimary"
+        android:textSize="14sp"
+        app:cornerRadius="54dp" />
+
+</LinearLayout>

@@ -74,4 +74,6 @@
 
     <include layout="@layout/no_results" />
 
+    <include layout="@layout/search_history" />
+
 </LinearLayout>

@@ -43,4 +43,10 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
+    <style name="Header">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">?attr/textPrimary</item>
+    </style>
+
 </resources>

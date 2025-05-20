@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.Call
@@ -31,12 +32,18 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val iTunesService = retrofit.create(ITunesApi::class.java)
     private val tracks = ArrayList<Track>()
-    private val trackAdapter = TrackAdapter(tracks)
+    private val historyTracks = ArrayList<Track>()
+
+    private lateinit var trackAdapter: TrackAdapter
+    private lateinit var trackHistoryAdapter: TrackAdapter
 
     private lateinit var noNetworkView: LinearLayout
     private lateinit var noResultsView: LinearLayout
 
     private lateinit var searchFieldValue: String
+
+    private lateinit var history: SearchHistory
+    private lateinit var rvHistory: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -47,10 +54,24 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        history = SearchHistory(this)
+        historyTracks.addAll(history.getTracks())
+
         noNetworkView = findViewById<LinearLayout>(R.id.llNoNetwork)
         noResultsView = findViewById<LinearLayout>(R.id.llNoResults)
 
+        rvHistory = findViewById(R.id.rvTrackHistoryList)
+        trackHistoryAdapter = TrackAdapter(historyTracks) {}
+        rvHistory.adapter = trackHistoryAdapter
+
         val rvTrackList = findViewById<RecyclerView>(R.id.rvTrackList)
+        trackAdapter = TrackAdapter(tracks) { track ->
+            history.saveTrack(track)
+            historyTracks.clear()
+            historyTracks.addAll(history.getTracks())
+            trackHistoryAdapter.notifyDataSetChanged()
+        }
         rvTrackList.adapter = trackAdapter
 
         val toolbar = findViewById<MaterialToolbar>(R.id.search_activity_toolbar)
@@ -58,7 +79,11 @@ class SearchActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        val historyView = findViewById<LinearLayout>(R.id.llSearchHistory)
+
         val clearButton = findViewById<ImageView>(R.id.clear_button)
+        val clearHistoryButton = findViewById<Button>(R.id.bvClearTrackHistory)
+
 
         val searchInput = findViewById<EditText>(R.id.input_field)
 
@@ -66,7 +91,9 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchFieldValue = s.toString()
-                clearButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
+                clearButton.isVisible = if (s.isNullOrEmpty()) false else true
+                historyView.isVisible =
+                    searchInput.hasFocus() && s?.isEmpty() == true && !historyTracks.isEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -88,15 +115,34 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+        searchInput.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && searchInput.text.isEmpty() && !historyTracks.isEmpty()) {
+                historyTracks.clear()
+                historyTracks.addAll(history.getTracks())
+                trackHistoryAdapter.notifyDataSetChanged()
+                historyView.isVisible = true
+            } else {
+                historyView.isVisible = false
+            }
+        }
+
+        clearHistoryButton.setOnClickListener {
+            historyView.isVisible = false
+            history.clear()
+            historyTracks.clear()
+            trackHistoryAdapter.notifyDataSetChanged()
+        }
 
         clearButton.setOnClickListener {
             searchInput.setText("")
             hideKeyboard(searchInput)
             tracks.clear()
             trackAdapter.notifyDataSetChanged()
-            noNetworkView.visibility = View.GONE
-            noResultsView.visibility = View.GONE
+            noNetworkView.isVisible = false
+            noResultsView.isVisible = false
         }
+
+        searchInput.requestFocus()
     }
 
     private fun showSearchResults(searchQuery: String) {
@@ -104,8 +150,8 @@ class SearchActivity : AppCompatActivity() {
             return
         }
         tracks.clear()
-        noNetworkView.visibility = View.GONE
-        noResultsView.visibility = View.GONE
+        noNetworkView.isVisible = false
+        noResultsView.isVisible = false
 
         iTunesService.search(searchQuery)
             .enqueue(object : Callback<TracksResponse> {
@@ -121,6 +167,7 @@ class SearchActivity : AppCompatActivity() {
                             tracks.addAll(
                                 results.map { track ->
                                     Track(
+                                        track.trackId,
                                         track.trackName,
                                         track.artistName,
                                         track.trackTimeMillis,
@@ -129,7 +176,7 @@ class SearchActivity : AppCompatActivity() {
                                 }
                             )
                         } else {
-                            noResultsView.visibility = View.VISIBLE
+                            noResultsView.isVisible = true
                         }
                         trackAdapter.notifyDataSetChanged()
                     }
@@ -139,7 +186,7 @@ class SearchActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                     tracks.clear()
                     trackAdapter.notifyDataSetChanged()
-                    noNetworkView.visibility = View.VISIBLE
+                    noNetworkView.isVisible = true
                 }
             })
     }
