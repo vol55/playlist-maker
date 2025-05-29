@@ -3,7 +3,6 @@ package com.example.playlistmaker
 import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
