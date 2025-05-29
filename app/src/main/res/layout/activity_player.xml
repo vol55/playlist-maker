@@ -43,7 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/space_24dp"
-            android:text="Yesterday (Remastered 2009)"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivCoverArtwork" />
 
@@ -54,7 +53,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/space_12dp"
-            android:text="The Beatles"
             app:layout_constraintStart_toStartOf="@+id/tvTrackTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvTrackTitle" />
 
