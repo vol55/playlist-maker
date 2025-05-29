@@ -16,16 +16,9 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val isDarkTheme =
-            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-
         val toolbar = findViewById<MaterialToolbar>(R.id.settings_activity_toolbar)
         toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
-        }
-
-        if (isDarkTheme) {
-            toolbar.navigationIcon = null
         }
 
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.smThemeSwitcher)
