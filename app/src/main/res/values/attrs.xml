@@ -17,6 +17,8 @@
 
     <attr name="noNetworkImage" format="reference" />
     <attr name="noResultsImage" format="reference" />
+    <attr name="play" format="reference" />
+    <attr name="rounded_button" format="reference" />
 
     <attr name="retryButtonBackground" format="color" />
 
