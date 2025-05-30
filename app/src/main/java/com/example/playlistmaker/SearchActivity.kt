@@ -203,14 +203,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun startPlayerActivity(track: Track) {
         val playerIntent = Intent(this, PlayerActivity::class.java)
-        playerIntent.putExtra("trackName", track.trackName)
-        playerIntent.putExtra("artistName", track.artistName)
-        playerIntent.putExtra("duration", track.trackTimeMillis)
-        playerIntent.putExtra("artwork", track.getCoverArtwork())
-        playerIntent.putExtra("collectionName", track.collectionName)
-        playerIntent.putExtra("releaseDate", track.releaseDate)
-        playerIntent.putExtra("primaryGenreName", track.primaryGenreName)
-        playerIntent.putExtra("country", track.country)
+        playerIntent.putExtra("track", track)
         startActivity(playerIntent)
     }
 

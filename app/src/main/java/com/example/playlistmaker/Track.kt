@@ -1,5 +1,9 @@
 package com.example.playlistmaker
 
+import kotlinx.parcelize.Parcelize
+import android.os.Parcelable
+
+@Parcelize
 data class Track(
     val trackId: Int,
     val trackName: String,
@@ -10,6 +14,6 @@ data class Track(
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
-) {
+) : Parcelable {
     fun getCoverArtwork(): String = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
 }

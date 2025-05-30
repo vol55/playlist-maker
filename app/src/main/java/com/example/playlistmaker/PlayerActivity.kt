@@ -19,32 +19,27 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
+        val track: Track? = intent.getParcelableExtra("track", Track::class.java)
+
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbarButtonBack)
         toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        val trackName = intent.getStringExtra("trackName").orEmpty()
-        val artistName = intent.getStringExtra("artistName").orEmpty()
-        val duration =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(intent.getIntExtra("duration", 0))
-        val collectionName = intent.getStringExtra("collectionName").orEmpty()
-        val releaseDate = intent.getStringExtra("releaseDate").orEmpty()
-        val year = if (releaseDate.length >= 4) releaseDate.substring(0, 4) else ""
-        val primaryGenreName = intent.getStringExtra("primaryGenreName").orEmpty()
-        val country = intent.getStringExtra("country").orEmpty()
-        val artworkUrl = intent.getStringExtra("artwork").orEmpty()
+        val duration = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track?.trackTimeMillis)
+        val releaseDate = track?.releaseDate
+        val year = releaseDate?.length?.let { if (it >= 4) releaseDate.substring(0, 4) else "" }
 
-        findViewById<TextView>(R.id.tvTrackTitle).text = trackName
-        findViewById<TextView>(R.id.tvArtistName).text = artistName
+        findViewById<TextView>(R.id.tvTrackTitle).text = track?.trackName
+        findViewById<TextView>(R.id.tvArtistName).text = track?.artistName
         findViewById<TextView>(R.id.tvTrackDuration).text = duration
-        findViewById<TextView>(R.id.tvCollectionName).text = collectionName
+        findViewById<TextView>(R.id.tvCollectionName).text = track?.collectionName
         findViewById<TextView>(R.id.tvReleaseDate).text = year
-        findViewById<TextView>(R.id.tvPrimaryGenreName).text = primaryGenreName
-        findViewById<TextView>(R.id.tvCountry).text = country
+        findViewById<TextView>(R.id.tvPrimaryGenreName).text = track?.primaryGenreName
+        findViewById<TextView>(R.id.tvCountry).text = track?.country
 
 
         val artworkImageView = findViewById<ImageView>(R.id.ivCoverArtwork)
         Glide.with(this)
-            .load(artworkUrl)
+            .load(track?.getCoverArtwork())
             .apply(
                 RequestOptions()
                     .placeholder(R.drawable.placeholder)
