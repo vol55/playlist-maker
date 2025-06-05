@@ -25,5 +25,13 @@
     <string name="no_results_message">Ничего не нашлось</string>
     <string name="search_history">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+    <string name="start_stop">start/stop</string>
+    <string name="add_to_library">add to library</string>
+    <string name="like">like</string>
 
 </resources>

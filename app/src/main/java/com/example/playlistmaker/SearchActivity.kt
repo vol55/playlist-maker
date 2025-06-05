@@ -1,9 +1,11 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -40,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var noNetworkView: LinearLayout
     private lateinit var noResultsView: LinearLayout
 
-    private lateinit var searchFieldValue: String
+    private var searchFieldValue: String = ""
 
     private lateinit var history: SearchHistory
     private lateinit var rvHistory: RecyclerView
@@ -62,7 +64,9 @@ class SearchActivity : AppCompatActivity() {
         noResultsView = findViewById<LinearLayout>(R.id.llNoResults)
 
         rvHistory = findViewById(R.id.rvTrackHistoryList)
-        trackHistoryAdapter = TrackAdapter(historyTracks) {}
+        trackHistoryAdapter = TrackAdapter(historyTracks) { track ->
+            startPlayerActivity(track)
+        }
         rvHistory.adapter = trackHistoryAdapter
 
         val rvTrackList = findViewById<RecyclerView>(R.id.rvTrackList)
@@ -71,6 +75,7 @@ class SearchActivity : AppCompatActivity() {
             historyTracks.clear()
             historyTracks.addAll(history.getTracks())
             trackHistoryAdapter.notifyDataSetChanged()
+            startPlayerActivity(track)
         }
         rvTrackList.adapter = trackAdapter
 
@@ -164,6 +169,7 @@ class SearchActivity : AppCompatActivity() {
                     if (response.code() == 200) {
                         val results = response.body()?.results
                         if (!results.isNullOrEmpty()) {
+                            Log.d("DEBUG_TAG", results[0].toString())
                             tracks.addAll(
                                 results.map { track ->
                                     Track(
@@ -171,7 +177,11 @@ class SearchActivity : AppCompatActivity() {
                                         track.trackName,
                                         track.artistName,
                                         track.trackTimeMillis,
-                                        track.artworkUrl100
+                                        track.artworkUrl100,
+                                        track.collectionName,
+                                        track.releaseDate,
+                                        track.primaryGenreName,
+                                        track.country,
                                     )
                                 }
                             )
@@ -189,6 +199,12 @@ class SearchActivity : AppCompatActivity() {
                     noNetworkView.isVisible = true
                 }
             })
+    }
+
+    private fun startPlayerActivity(track: Track) {
+        val playerIntent = Intent(this, PlayerActivity::class.java)
+        playerIntent.putExtra("track", track)
+        startActivity(playerIntent)
     }
 
     private fun hideKeyboard(view: View) {
