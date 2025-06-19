@@ -33,5 +33,6 @@
     <string name="start_stop">start/stop</string>
     <string name="add_to_library">add to library</string>
     <string name="like">like</string>
+    <string name="current_time_start">00:00</string>
 
 </resources>
