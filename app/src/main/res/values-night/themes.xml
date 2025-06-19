@@ -24,6 +24,8 @@
         <item name="noNetworkImage">@drawable/no_network_dark</item>
         <item name="noResultsImage">@drawable/no_results_dark</item>
         <item name="play">@drawable/play_dark</item>
+        <item name="pause">@drawable/pause_dark</item>
+
         <item name="rounded_button">@drawable/round_button_dark</item>
 
         <item name="retryButtonBackground">@color/white</item>

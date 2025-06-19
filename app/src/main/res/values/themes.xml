@@ -24,6 +24,7 @@
         <item name="noNetworkImage">@drawable/no_network_light</item>
         <item name="noResultsImage">@drawable/no_results_light</item>
         <item name="play">@drawable/play</item>
+        <item name="pause">@drawable/pause</item>
         <item name="rounded_button">@drawable/round_button</item>
 
         <item name="retryButtonBackground">@color/yandex_black</item>
