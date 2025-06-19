@@ -60,8 +60,8 @@ class SearchActivity : AppCompatActivity() {
         history = SearchHistory(this)
         historyTracks.addAll(history.getTracks())
 
-        noNetworkView = findViewById<LinearLayout>(R.id.llNoNetwork)
-        noResultsView = findViewById<LinearLayout>(R.id.llNoResults)
+        noNetworkView = findViewById(R.id.llNoNetwork)
+        noResultsView = findViewById(R.id.llNoResults)
 
         rvHistory = findViewById(R.id.rvTrackHistoryList)
         trackHistoryAdapter = TrackAdapter(historyTracks) { track ->
@@ -96,9 +96,9 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchFieldValue = s.toString()
-                clearButton.isVisible = if (s.isNullOrEmpty()) false else true
+                clearButton.isVisible = !s.isNullOrEmpty()
                 historyView.isVisible =
-                    searchInput.hasFocus() && s?.isEmpty() == true && !historyTracks.isEmpty()
+                    searchInput.hasFocus() && s?.isEmpty() == true && historyTracks.isNotEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -120,8 +120,8 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-        searchInput.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && searchInput.text.isEmpty() && !historyTracks.isEmpty()) {
+        searchInput.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && searchInput.text.isEmpty() && historyTracks.isNotEmpty()) {
                 historyTracks.clear()
                 historyTracks.addAll(history.getTracks())
                 trackHistoryAdapter.notifyDataSetChanged()
