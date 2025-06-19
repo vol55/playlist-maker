@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -13,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -36,6 +39,8 @@ class SearchActivity : AppCompatActivity() {
     private val tracks = ArrayList<Track>()
     private val historyTracks = ArrayList<Track>()
 
+    private var isClickAllowed = true
+
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var trackHistoryAdapter: TrackAdapter
 
@@ -47,6 +52,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var history: SearchHistory
     private lateinit var rvHistory: RecyclerView
 
+    private lateinit var rvTrackList: RecyclerView
+    private lateinit var progressBar: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -57,6 +65,9 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+
+        progressBar = findViewById(R.id.progressBar)
+
         history = SearchHistory(this)
         historyTracks.addAll(history.getTracks())
 
@@ -65,17 +76,21 @@ class SearchActivity : AppCompatActivity() {
 
         rvHistory = findViewById(R.id.rvTrackHistoryList)
         trackHistoryAdapter = TrackAdapter(historyTracks) { track ->
-            startPlayerActivity(track)
+            if (clickDebounce()) {
+                startPlayerActivity(track)
+            }
         }
         rvHistory.adapter = trackHistoryAdapter
 
-        val rvTrackList = findViewById<RecyclerView>(R.id.rvTrackList)
+        rvTrackList = findViewById(R.id.rvTrackList)
         trackAdapter = TrackAdapter(tracks) { track ->
-            history.saveTrack(track)
-            historyTracks.clear()
-            historyTracks.addAll(history.getTracks())
-            trackHistoryAdapter.notifyDataSetChanged()
-            startPlayerActivity(track)
+            if (clickDebounce()) {
+                history.saveTrack(track)
+                historyTracks.clear()
+                historyTracks.addAll(history.getTracks())
+                trackHistoryAdapter.notifyDataSetChanged()
+                startPlayerActivity(track)
+            }
         }
         rvTrackList.adapter = trackAdapter
 
@@ -99,6 +114,7 @@ class SearchActivity : AppCompatActivity() {
                 clearButton.isVisible = !s.isNullOrEmpty()
                 historyView.isVisible =
                     searchInput.hasFocus() && s?.isEmpty() == true && historyTracks.isNotEmpty()
+                searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -115,8 +131,8 @@ class SearchActivity : AppCompatActivity() {
         searchInput.addTextChangedListener(textWatcher)
         searchInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                handler.removeCallbacks(searchRunnable)
                 showSearchResults(searchInput.text.toString())
-                true
             }
             false
         }
@@ -150,6 +166,23 @@ class SearchActivity : AppCompatActivity() {
         searchInput.requestFocus()
     }
 
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { showSearchResults(searchFieldValue) }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     private fun showSearchResults(searchQuery: String) {
         if (searchQuery.isEmpty()) {
             return
@@ -157,6 +190,7 @@ class SearchActivity : AppCompatActivity() {
         tracks.clear()
         noNetworkView.isVisible = false
         noResultsView.isVisible = false
+        progressBar.isVisible = true
 
         iTunesService.search(searchQuery)
             .enqueue(object : Callback<TracksResponse> {
@@ -182,20 +216,22 @@ class SearchActivity : AppCompatActivity() {
                                         track.releaseDate,
                                         track.primaryGenreName,
                                         track.country,
+                                        track.previewUrl,
                                     )
                                 }
                             )
                         } else {
+                            progressBar.isVisible = false
                             noResultsView.isVisible = true
                         }
+                        progressBar.isVisible = false
                         trackAdapter.notifyDataSetChanged()
                     }
                 }
 
-                @SuppressLint("NotifyDataSetChanged")
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                     tracks.clear()
-                    trackAdapter.notifyDataSetChanged()
+                    progressBar.isVisible = false
                     noNetworkView.isVisible = true
                 }
             })
@@ -219,5 +255,7 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val SEARCH_FIELD_VALUE = "SEARCH_STRING"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
