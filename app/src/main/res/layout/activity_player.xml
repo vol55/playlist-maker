@@ -99,12 +99,12 @@
 
 
         <TextView
-            android:id="@+id/timeLeft"
+            android:id="@+id/tvCurrentTime"
             style="@style/TextSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="0:30"
+            android:text="@string/current_time_start"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ibPlayButton" />
@@ -118,7 +118,7 @@
             android:layout_marginTop="30dp"
             android:text="@string/duration"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timeLeft" />
+            app:layout_constraintTop_toBottomOf="@+id/tvCurrentTime" />
 
         <TextView
             android:id="@+id/tvCollectionNameLabel"
@@ -175,7 +175,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timeLeft" />
+            app:layout_constraintTop_toBottomOf="@+id/tvCurrentTime" />
 
         <TextView
             android:id="@+id/tvCollectionName"
