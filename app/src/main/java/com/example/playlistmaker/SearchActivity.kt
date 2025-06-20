@@ -253,6 +253,11 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_FIELD_VALUE, searchFieldValue)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
+    }
+
     companion object {
         private const val SEARCH_FIELD_VALUE = "SEARCH_STRING"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
