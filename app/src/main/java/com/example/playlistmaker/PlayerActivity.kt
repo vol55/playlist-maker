@@ -42,7 +42,7 @@ class PlayerActivity : AppCompatActivity() {
 
         handler = Handler(Looper.getMainLooper())
 
-        track = intent.getParcelableExtra("track", Track::class.java)!!
+        track = intent.getParcelableExtra(TRACK, Track::class.java)!!
 
         play = findViewById(R.id.ibPlayButton)
         play.setOnClickListener { playbackControl() }
@@ -167,5 +167,7 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
         private const val DELAY = 1000L
+
+        const val TRACK = "track"
     }
 }
