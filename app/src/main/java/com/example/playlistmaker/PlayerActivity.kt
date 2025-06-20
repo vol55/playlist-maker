@@ -27,9 +27,6 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var tvCurrentTime: TextView
     private lateinit var updateTimerTask: Runnable
 
-    private val duration = 30
-    private var timer = 0
-
     private var mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT
 
@@ -97,7 +94,6 @@ class PlayerActivity : AppCompatActivity() {
             setPlayIcon()
             playerState = STATE_PREPARED
             handler.removeCallbacks(updateTimerTask)
-            timer = 0
             tvCurrentTime.text = getString(R.string.current_time_start)
         }
     }
@@ -142,10 +138,10 @@ class PlayerActivity : AppCompatActivity() {
     private fun createUpdateTimerTask(): Runnable {
         return object : Runnable {
             override fun run() {
-                if (timer < duration) {
+                val currentPosition = mediaPlayer.currentPosition
+                if (currentPosition < PREVIEW_DURATION) {
                     tvCurrentTime.text = SimpleDateFormat("mm:ss", Locale.getDefault())
-                        .format(mediaPlayer.currentPosition)
-                    timer += 1
+                        .format(currentPosition)
                     handler.postDelayed(this, DELAY)
                 }
             }
@@ -169,6 +165,8 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
+
+        private const val PREVIEW_DURATION = 30000
         private const val DELAY = 500L
 
         const val TRACK = "track"
