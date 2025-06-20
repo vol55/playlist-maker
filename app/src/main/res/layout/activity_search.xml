@@ -61,6 +61,15 @@
 
     </FrameLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_height="@dimen/progress_bar_size"
+        android:layout_gravity="center"
+        android:layout_marginTop="140dp"
+        android:indeterminateTint="@color/yandex_blue"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTrackList"
         android:layout_width="match_parent"
@@ -70,10 +79,12 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/track_item" />
 
+
     <include layout="@layout/no_network" />
 
     <include layout="@layout/no_results" />
 
     <include layout="@layout/search_history" />
+
 
 </LinearLayout>
