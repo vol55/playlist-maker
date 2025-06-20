@@ -42,7 +42,7 @@ class PlayerActivity : AppCompatActivity() {
 
         handler = Handler(Looper.getMainLooper())
 
-        val track = intent.getParcelableExtra(TRACK, Track::class.java) ?: run {
+        track = intent.getParcelableExtra(TRACK, Track::class.java) ?: run {
             finish()
             return
         }
