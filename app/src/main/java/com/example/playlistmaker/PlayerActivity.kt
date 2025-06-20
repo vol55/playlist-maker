@@ -42,7 +42,10 @@ class PlayerActivity : AppCompatActivity() {
 
         handler = Handler(Looper.getMainLooper())
 
-        track = intent.getParcelableExtra(TRACK, Track::class.java)!!
+        val track = intent.getParcelableExtra(TRACK, Track::class.java) ?: run {
+            finish()
+            return
+        }
 
         play = findViewById(R.id.ibPlayButton)
         play.setOnClickListener { playbackControl() }
