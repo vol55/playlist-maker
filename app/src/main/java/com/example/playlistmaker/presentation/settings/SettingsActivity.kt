@@ -1,20 +1,26 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.settings
 
 import android.content.Intent
 import android.content.Intent.EXTRA_EMAIL
 import android.content.Intent.EXTRA_TEXT
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var themeInteractor: com.example.playlistmaker.domain.api.ThemeInteractor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        themeInteractor = Creator.provideThemeInteractor(this)
 
         val toolbar = findViewById<MaterialToolbar>(R.id.settings_activity_toolbar)
         toolbar.setNavigationOnClickListener {
@@ -22,9 +28,9 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.smThemeSwitcher)
-        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.isChecked = themeInteractor.isDarkTheme()
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            (applicationContext as App).switchTheme(checked)
+            themeInteractor.switchTheme(checked)
         }
 
         val shareListOption = findViewById<MaterialTextView>(R.id.share_list_option)

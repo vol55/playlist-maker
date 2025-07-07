@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundPrimaryVariant"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".presentation.main.MainActivity">
 
 
     <com.google.android.material.appbar.MaterialToolbar
