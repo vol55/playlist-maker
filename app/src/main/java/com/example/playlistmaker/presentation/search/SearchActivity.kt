@@ -81,9 +81,7 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter = TrackAdapter(tracks) { track ->
             if (clickDebounce()) {
                 historyInteractor.saveTrack(track)
-                historyTracks.clear()
-                historyTracks.addAll(historyInteractor.getTracks())
-                trackHistoryAdapter.notifyDataSetChanged()
+                updateHistory()
                 startPlayerActivity(track)
             }
         }
@@ -131,9 +129,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchInput.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && searchInput.text.isEmpty() && historyTracks.isNotEmpty()) {
-                historyTracks.clear()
-                historyTracks.addAll(historyInteractor.getTracks())
-                trackHistoryAdapter.notifyDataSetChanged()
+                updateHistory()
                 historyView.isVisible = true
             } else {
                 historyView.isVisible = false
@@ -143,8 +139,7 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton.setOnClickListener {
             historyView.isVisible = false
             historyInteractor.clear()
-            historyTracks.clear()
-            trackHistoryAdapter.notifyDataSetChanged()
+            updateHistory()
         }
 
         clearButton.setOnClickListener {
@@ -161,6 +156,12 @@ class SearchActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { showSearchResults(searchFieldValue) }
+
+    private fun updateHistory() {
+        historyTracks.clear()
+        historyTracks.addAll(historyInteractor.getTracks())
+        trackHistoryAdapter.notifyDataSetChanged()
+    }
 
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
