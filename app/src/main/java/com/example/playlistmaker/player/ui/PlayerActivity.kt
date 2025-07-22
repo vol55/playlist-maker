@@ -46,23 +46,23 @@ class PlayerActivity : AppCompatActivity() {
 
         playerViewModel.observePlayerState().observe(this) { state ->
             when (state) {
-                PlayerViewModel.STATE_DEFAULT -> {
+                PlayerViewModel.PlayerState.DEFAULT -> {
                     playButton.isEnabled = false
                     tvCurrentTime.text = getString(R.string.current_time_start)
                     setPlayIcon()
                 }
 
-                PlayerViewModel.STATE_PREPARED -> {
+                PlayerViewModel.PlayerState.PREPARED -> {
                     playButton.isEnabled = true
                     setPlayIcon()
                 }
 
-                PlayerViewModel.STATE_PLAYING -> {
+                PlayerViewModel.PlayerState.PLAYING -> {
                     playButton.isEnabled = true
                     setPauseIcon()
                 }
 
-                PlayerViewModel.STATE_PAUSED -> {
+                PlayerViewModel.PlayerState.PAUSED -> {
                     playButton.isEnabled = true
                     setPlayIcon()
                 }
@@ -114,7 +114,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (playerViewModel.observePlayerState().value == PlayerViewModel.STATE_PLAYING) {
+        if (playerViewModel.observePlayerState().value == PlayerViewModel.PlayerState.PLAYING) {
             playerViewModel.onPlayButtonClicked()
         }
     }

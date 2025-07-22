@@ -15,12 +15,14 @@ import java.util.Locale
 
 class PlayerViewModel(private val url: String) : ViewModel() {
 
-    companion object {
-        const val STATE_DEFAULT = 0
-        const val STATE_PREPARED = 1
-        const val STATE_PLAYING = 2
-        const val STATE_PAUSED = 3
+    enum class PlayerState {
+        DEFAULT,
+        PREPARED,
+        PLAYING,
+        PAUSED
+    }
 
+    companion object {
         private const val DELAY = 500L
 
         fun getFactory(trackUrl: String): ViewModelProvider.Factory = viewModelFactory {
@@ -30,8 +32,8 @@ class PlayerViewModel(private val url: String) : ViewModel() {
         }
     }
 
-    private val playerStateLiveData = MutableLiveData(STATE_DEFAULT)
-    fun observePlayerState(): LiveData<Int> = playerStateLiveData
+    private val playerStateLiveData = MutableLiveData(PlayerState.DEFAULT)
+    fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
 
     private val progressTimeLiveData = MutableLiveData("00:00")
     fun observeProgressTime(): LiveData<String> = progressTimeLiveData
@@ -41,7 +43,7 @@ class PlayerViewModel(private val url: String) : ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
 
     private val timerRunnable = Runnable {
-        if (playerStateLiveData.value == STATE_PLAYING) {
+        if (playerStateLiveData.value == PlayerState.PLAYING) {
             startTimerUpdate()
         }
     }
@@ -58,30 +60,31 @@ class PlayerViewModel(private val url: String) : ViewModel() {
 
     fun onPlayButtonClicked() {
         when (playerStateLiveData.value) {
-            STATE_PLAYING -> pausePlayer()
-            STATE_PREPARED, STATE_PAUSED -> startPlayer()
+            PlayerState.PLAYING -> pausePlayer()
+            PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
+            else -> {}
         }
     }
 
     private fun preparePlayer() {
         playerInteractor.prepare(url, {
-            playerStateLiveData.postValue(STATE_PREPARED)
+            playerStateLiveData.postValue(PlayerState.PREPARED)
         }, {
-            playerStateLiveData.postValue(STATE_PREPARED)
+            playerStateLiveData.postValue(PlayerState.PREPARED)
             resetTimer()
         })
     }
 
     private fun startPlayer() {
         playerInteractor.play()
-        playerStateLiveData.postValue(STATE_PLAYING)
+        playerStateLiveData.postValue(PlayerState.PLAYING)
         startTimerUpdate()
     }
 
     private fun pausePlayer() {
         pauseTimer()
         playerInteractor.pause()
-        playerStateLiveData.postValue(STATE_PAUSED)
+        playerStateLiveData.postValue(PlayerState.PAUSED)
     }
 
     private fun startTimerUpdate() {
