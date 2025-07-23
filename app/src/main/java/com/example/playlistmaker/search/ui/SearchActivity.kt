@@ -136,6 +136,7 @@ class SearchActivity : AppCompatActivity() {
 
                 else -> {
                     hideEverythingExcept(historyView)
+                    historyView.isVisible = historyTracks.isNotEmpty()
                 }
             }
         }
