@@ -3,12 +3,13 @@ package com.example.playlistmaker.creator
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.domain.PlayerInteractorImpl
+import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.search.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.TracksRepositoryImpl
+import com.example.playlistmaker.search.data.network.ITunesApiService
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.search.data.storage.PrefsStorageClient
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
@@ -22,11 +23,23 @@ import com.example.playlistmaker.settings.data.ThemeRepositoryImpl
 import com.example.playlistmaker.settings.domain.ThemeInteractor
 import com.example.playlistmaker.settings.domain.ThemeInteractorImpl
 import com.google.gson.reflect.TypeToken
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 object Creator {
+
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder().baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create()).build()
+    }
+
+    private val iTunesService: ITunesApiService by lazy {
+        retrofit.create(ITunesApiService::class.java)
+    }
+
     private fun getTracksRepository(context: Context): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient(context))
+        return TracksRepositoryImpl(RetrofitNetworkClient(context, iTunesService))
     }
 
     fun provideTracksInteractor(context: Context): TracksInteractor {
