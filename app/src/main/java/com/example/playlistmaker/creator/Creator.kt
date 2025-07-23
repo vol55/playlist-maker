@@ -2,7 +2,7 @@ package com.example.playlistmaker.creator
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.player.data.PlayerRepository
+import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.player.domain.PlayerInteractorImpl
@@ -18,8 +18,8 @@ import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.settings.data.ThemeRepositoryImpl
-import com.example.playlistmaker.settings.domain.api.ThemeInteractor
-import com.example.playlistmaker.settings.domain.impl.ThemeInteractorImpl
+import com.example.playlistmaker.settings.domain.ThemeInteractor
+import com.example.playlistmaker.settings.domain.ThemeInteractorImpl
 import com.google.gson.reflect.TypeToken
 
 

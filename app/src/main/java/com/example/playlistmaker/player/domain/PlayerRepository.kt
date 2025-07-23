@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.data
+package com.example.playlistmaker.player.domain
 
 interface PlayerRepository {
     fun prepare(

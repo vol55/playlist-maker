@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.settings.domain.api.ThemeInteractor
+import com.example.playlistmaker.settings.domain.ThemeInteractor
 import com.example.playlistmaker.util.SingleLiveEvent
 
 class SettingsViewModel(

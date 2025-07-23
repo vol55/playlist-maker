@@ -2,7 +2,7 @@ package com.example.playlistmaker.util
 
 import android.app.Application
 import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.settings.domain.api.ThemeInteractor
+import com.example.playlistmaker.settings.domain.ThemeInteractor
 
 class App : Application() {
 

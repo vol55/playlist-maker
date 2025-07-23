@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.domain
 
-import com.example.playlistmaker.player.data.PlayerRepository
+import com.example.playlistmaker.player.domain.PlayerRepository
 
 class PlayerInteractorImpl(
     private val repository: PlayerRepository

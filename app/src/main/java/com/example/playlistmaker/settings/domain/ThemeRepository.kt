@@ -1,4 +1,4 @@
-package com.example.playlistmaker.settings.data
+package com.example.playlistmaker.settings.domain
 
 interface ThemeRepository {
     fun getTheme(): Boolean

@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.data
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.player.domain.PlayerRepository
 
 class PlayerRepositoryImpl : PlayerRepository {
 
