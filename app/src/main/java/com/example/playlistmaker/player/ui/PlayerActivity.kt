@@ -44,11 +44,10 @@ class PlayerActivity : AppCompatActivity() {
             this, PlayerViewModel.getFactory(track.previewUrl)
         )[PlayerViewModel::class.java]
 
-        playerViewModel.observePlayerState().observe(this) { state ->
-            when (state) {
+        playerViewModel.screenState.observe(this) { state ->
+            when (state.playerState) {
                 PlayerViewModel.PlayerState.DEFAULT -> {
                     playButton.isEnabled = false
-                    tvCurrentTime.text = getString(R.string.current_time_start)
                     setPlayIcon()
                 }
 
@@ -67,10 +66,7 @@ class PlayerActivity : AppCompatActivity() {
                     setPlayIcon()
                 }
             }
-        }
-
-        playerViewModel.observeProgressTime().observe(this) { time ->
-            tvCurrentTime.text = time
+            tvCurrentTime.text = state.progressTime
         }
 
         playButton.setOnClickListener { playerViewModel.onPlayButtonClicked() }
@@ -114,7 +110,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (playerViewModel.observePlayerState().value == PlayerViewModel.PlayerState.PLAYING) {
+        if (playerViewModel.screenState.value?.playerState == PlayerViewModel.PlayerState.PLAYING) {
             playerViewModel.onPlayButtonClicked()
         }
     }

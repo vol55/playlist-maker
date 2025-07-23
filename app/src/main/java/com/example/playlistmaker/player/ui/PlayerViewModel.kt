@@ -16,10 +16,7 @@ import java.util.Locale
 class PlayerViewModel(private val url: String) : ViewModel() {
 
     enum class PlayerState {
-        DEFAULT,
-        PREPARED,
-        PLAYING,
-        PAUSED
+        DEFAULT, PREPARED, PLAYING, PAUSED
     }
 
     companion object {
@@ -32,19 +29,16 @@ class PlayerViewModel(private val url: String) : ViewModel() {
         }
     }
 
-    private val playerStateLiveData = MutableLiveData(PlayerState.DEFAULT)
-    fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
-
-    private val progressTimeLiveData = MutableLiveData("00:00")
-    fun observeProgressTime(): LiveData<String> = progressTimeLiveData
+    private val screenStateLiveData = MutableLiveData(PlayerScreenState())
+    val screenState: LiveData<PlayerScreenState> = screenStateLiveData
 
     private val playerInteractor: PlayerInteractor = Creator.providePlayerInteractor()
-
     private val handler = Handler(Looper.getMainLooper())
 
-    private val timerRunnable = Runnable {
-        if (playerStateLiveData.value == PlayerState.PLAYING) {
-            startTimerUpdate()
+    private val timerRunnable: Runnable = Runnable {
+        if (screenStateLiveData.value?.playerState == PlayerState.PLAYING) {
+            updateProgress()
+            handler.postDelayed(timerRunnable, DELAY)
         }
     }
 
@@ -59,7 +53,7 @@ class PlayerViewModel(private val url: String) : ViewModel() {
     }
 
     fun onPlayButtonClicked() {
-        when (playerStateLiveData.value) {
+        when (screenStateLiveData.value?.playerState) {
             PlayerState.PLAYING -> pausePlayer()
             PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
             else -> {}
@@ -68,30 +62,32 @@ class PlayerViewModel(private val url: String) : ViewModel() {
 
     private fun preparePlayer() {
         playerInteractor.prepare(url, {
-            playerStateLiveData.postValue(PlayerState.PREPARED)
+            screenStateLiveData.value = PlayerScreenState(
+                playerState = PlayerState.PREPARED,
+                progressTime = screenStateLiveData.value?.progressTime ?: "00:00"
+            )
         }, {
-            playerStateLiveData.postValue(PlayerState.PREPARED)
-            resetTimer()
+            screenStateLiveData.value = PlayerScreenState(
+                playerState = PlayerState.PREPARED, progressTime = "00:00" // Explicit reset
+            )
         })
     }
 
     private fun startPlayer() {
         playerInteractor.play()
-        playerStateLiveData.postValue(PlayerState.PLAYING)
-        startTimerUpdate()
+        updateState { copy(playerState = PlayerState.PLAYING) }
+        startTimer()
     }
 
     private fun pausePlayer() {
-        pauseTimer()
         playerInteractor.pause()
-        playerStateLiveData.postValue(PlayerState.PAUSED)
+        updateState { copy(playerState = PlayerState.PAUSED) }
+        pauseTimer()
     }
 
-    private fun startTimerUpdate() {
-        val currentPosition = playerInteractor.getCurrentPosition()
-        progressTimeLiveData.postValue(
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentPosition)
-        )
+    private fun startTimer() {
+        handler.removeCallbacks(timerRunnable)
+        updateProgress()
         handler.postDelayed(timerRunnable, DELAY)
     }
 
@@ -100,8 +96,22 @@ class PlayerViewModel(private val url: String) : ViewModel() {
     }
 
     private fun resetTimer() {
-        handler.removeCallbacks(timerRunnable)
-        progressTimeLiveData.postValue("00:00")
+        pauseTimer()
+        updateState { copy(progressTime = "00:00") }
     }
 
+    private fun updateProgress() {
+        val currentPosition = playerInteractor.getCurrentPosition()
+        updateState {
+            copy(
+                progressTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+                    currentPosition
+                )
+            )
+        }
+    }
+
+    private fun updateState(update: PlayerScreenState.() -> PlayerScreenState) {
+        screenStateLiveData.value = (screenStateLiveData.value ?: PlayerScreenState()).update()
+    }
 }
