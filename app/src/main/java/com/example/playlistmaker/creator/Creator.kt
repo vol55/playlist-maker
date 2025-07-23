@@ -1,6 +1,7 @@
 package com.example.playlistmaker.creator
 
 import android.content.Context
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.player.domain.PlayerRepository
 import com.example.playlistmaker.player.data.PlayerRepositoryImpl
@@ -46,7 +47,7 @@ object Creator {
 
 
     private fun getPlayerRepository(): PlayerRepository {
-        return PlayerRepositoryImpl()
+        return PlayerRepositoryImpl(player = { MediaPlayer() })
     }
 
     fun providePlayerInteractor(): PlayerInteractor {
