@@ -1,34 +1,24 @@
 package com.example.playlistmaker.player.data
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.domain.PlayerInteractor
 
-class PlayerInteractorImpl : PlayerInteractor {
+class PlayerRepositoryImpl : PlayerRepository {
 
     private var mediaPlayer: MediaPlayer? = null
 
-    private var onReadyCallback: (() -> Unit)? = null
-    private var onCompleteCallback: (() -> Unit)? = null
-
-    override fun prepare(url: String, onReady: () -> Unit, onComplete: () -> Unit) {
+    override fun prepare(
+        url: String, onPrepared: () -> Unit, onComplete: () -> Unit
+    ) {
         release()
-
         mediaPlayer = MediaPlayer().apply {
             setDataSource(url)
-            setOnPreparedListener {
-                onReady()
-            }
-            setOnCompletionListener {
-                onComplete()
-            }
+            setOnPreparedListener { onPrepared() }
+            setOnCompletionListener { onComplete() }
             prepareAsync()
         }
-
-        onReadyCallback = onReady
-        onCompleteCallback = onComplete
     }
 
-    override fun play() {
+    override fun start() {
         mediaPlayer?.start()
     }
 

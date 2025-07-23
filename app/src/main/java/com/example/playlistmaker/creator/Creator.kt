@@ -2,8 +2,10 @@ package com.example.playlistmaker.creator
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.player.data.PlayerInteractorImpl
+import com.example.playlistmaker.player.data.PlayerRepository
+import com.example.playlistmaker.player.data.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.PlayerInteractor
+import com.example.playlistmaker.player.domain.PlayerInteractorImpl
 import com.example.playlistmaker.search.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.TracksRepositoryImpl
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -42,8 +44,13 @@ object Creator {
         return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
     }
 
+
+    private fun getPlayerRepository(): PlayerRepository {
+        return PlayerRepositoryImpl()
+    }
+
     fun providePlayerInteractor(): PlayerInteractor {
-        return PlayerInteractorImpl()
+        return PlayerInteractorImpl(getPlayerRepository())
     }
 
     fun provideThemeInteractor(context: Context): ThemeInteractor {
