@@ -1,7 +1,5 @@
 package com.example.playlistmaker.settings.domain
 
-import com.example.playlistmaker.settings.domain.ThemeRepository
-
 class ThemeInteractorImpl(
     private val repository: ThemeRepository, private val applyThemeFunc: (Boolean) -> Unit
 ) : ThemeInteractor {
