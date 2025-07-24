@@ -60,7 +60,7 @@ object Creator {
 
 
     private fun getPlayerRepository(): PlayerRepository {
-        return PlayerRepositoryImpl(player = { MediaPlayer() })
+        return PlayerRepositoryImpl(player = MediaPlayer())
     }
 
     fun providePlayerInteractor(): PlayerInteractor {
