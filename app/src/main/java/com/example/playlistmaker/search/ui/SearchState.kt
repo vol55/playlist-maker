@@ -6,8 +6,8 @@ sealed interface SearchState {
 
     data class UpdateSearchHistory(val history: List<Track>) : SearchState
     data class Content(val tracks: List<Track>) : SearchState
-    object Loading : SearchState
+    data object Loading : SearchState
     data object NoResults : SearchState
     data object NotConnected : SearchState
-    object SearchHistory : SearchState
+    data object SearchHistory : SearchState
 }

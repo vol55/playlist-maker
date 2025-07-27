@@ -5,15 +5,14 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(private val url: String) : ViewModel() {
+class PlayerViewModel(
+    private val url: String,
+    private val playerInteractor: PlayerInteractor
+) : ViewModel() {
 
     enum class PlayerState {
         DEFAULT, PREPARED, PLAYING, PAUSED
@@ -21,18 +20,11 @@ class PlayerViewModel(private val url: String) : ViewModel() {
 
     companion object {
         private const val DELAY = 500L
-
-        fun getFactory(trackUrl: String): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(trackUrl)
-            }
-        }
     }
 
     private val screenStateLiveData = MutableLiveData(PlayerScreenState())
     val screenState: LiveData<PlayerScreenState> = screenStateLiveData
 
-    private val playerInteractor: PlayerInteractor = Creator.providePlayerInteractor()
     private val handler = Handler(Looper.getMainLooper())
 
     private val timerRunnable: Runnable = Runnable {
@@ -68,7 +60,7 @@ class PlayerViewModel(private val url: String) : ViewModel() {
             )
         }, {
             screenStateLiveData.value = PlayerScreenState(
-                playerState = PlayerState.PREPARED, progressTime = "00:00" // Explicit reset
+                playerState = PlayerState.PREPARED, progressTime = "00:00"
             )
         })
     }

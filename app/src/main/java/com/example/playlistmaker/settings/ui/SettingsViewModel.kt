@@ -2,28 +2,17 @@ package com.example.playlistmaker.settings.ui
 
 import android.content.Intent
 import android.net.Uri
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.settings.domain.ThemeInteractor
 import com.example.playlistmaker.util.SingleLiveEvent
 
 class SettingsViewModel(
     private val themeInteractor: ThemeInteractor
 ) : ViewModel() {
-
-    companion object {
-        fun getFactory(themeInteractor: ThemeInteractor): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    SettingsViewModel(themeInteractor)
-                }
-            }
-    }
 
     private val screenStateLiveData = MutableLiveData(
         SettingsState(isDarkTheme = themeInteractor.isDarkTheme())
@@ -42,6 +31,12 @@ class SettingsViewModel(
 
     fun onThemeSwitched(isDark: Boolean) {
         themeInteractor.switchTheme(isDark)
+
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDark) AppCompatDelegate.MODE_NIGHT_YES
+            else AppCompatDelegate.MODE_NIGHT_NO
+        )
+
         screenStateLiveData.value = screenStateLiveData.value?.copy(isDarkTheme = isDark)
     }
 

@@ -57,4 +57,6 @@ dependencies {
 
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.activity.ktx)
+
+    implementation(libs.koin.android)
 }

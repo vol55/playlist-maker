@@ -4,12 +4,7 @@ class PlayerInteractorImpl(
     private val repository: PlayerRepository
 ) : PlayerInteractor {
 
-    private var onReadyCallback: (() -> Unit)? = null
-    private var onCompleteCallback: (() -> Unit)? = null
-
     override fun prepare(url: String, onReady: () -> Unit, onComplete: () -> Unit) {
-        onReadyCallback = onReady
-        onCompleteCallback = onComplete
         repository.prepare(url, onReady, onComplete)
     }
 
