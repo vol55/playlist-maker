@@ -15,7 +15,7 @@ val settingsModule = module {
         get<Context>().getSharedPreferences("settings", Context.MODE_PRIVATE)
     }
 
-    factory<ThemeRepository> { ThemeRepositoryImpl(get()) }
+    single<ThemeRepository> { ThemeRepositoryImpl(get()) }
     factory<ThemeInteractor> { ThemeInteractorImpl(get()) }
 
     viewModel { SettingsViewModel(get()) }

@@ -23,9 +23,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 val searchModule = module {
-    factory<TracksRepository> { TracksRepositoryImpl(get()) }
+    single<TracksRepository> { TracksRepositoryImpl(get()) }
     factory<TracksInteractor> { TracksInteractorImpl(get()) }
-    factory<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get()) }
+    single<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get()) }
     factory<SearchHistoryInteractor> { SearchHistoryInteractorImpl(get()) }
 
     single<ITunesApiService> {
@@ -36,14 +36,14 @@ val searchModule = module {
             .create(ITunesApiService::class.java)
     }
 
-    factory<NetworkClient> {
+    single<NetworkClient> {
         RetrofitNetworkClient(
             context = get(),
             iTunesService = get()
         )
     }
 
-    factory<StorageClient<ArrayList<Track>>> {
+    single<StorageClient<ArrayList<Track>>> {
         PrefsStorageClient(
             context = get(),
             dataKey = "SEARCH_HISTORY_KEY",
