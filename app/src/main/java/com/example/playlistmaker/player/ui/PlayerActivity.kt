@@ -7,7 +7,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -16,33 +15,28 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.util.dpToPx
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var playButton: ImageButton
     private lateinit var tvCurrentTime: TextView
-    private lateinit var track: Track
-    private lateinit var playerViewModel: PlayerViewModel
+
+    private val track: Track by lazy {
+        val trackJson = intent.getStringExtra("TRACK_JSON_KEY")
+        Gson().fromJson(trackJson, Track::class.java)
+    }
+
+    private val playerViewModel: PlayerViewModel by viewModel { parametersOf(track.previewUrl) }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        val trackJson = intent.getStringExtra("TRACK_JSON_KEY")
-        if (trackJson == null) {
-            finish()
-            return
-        }
-
-        track = Gson().fromJson(trackJson, Track::class.java)
-
         playButton = findViewById(R.id.ibPlayButton)
         tvCurrentTime = findViewById(R.id.tvCurrentTime)
-
-        playerViewModel = ViewModelProvider(
-            this, PlayerViewModel.getFactory(track.previewUrl)
-        )[PlayerViewModel::class.java]
 
         playerViewModel.screenState.observe(this) { state ->
             when (state.playerState) {

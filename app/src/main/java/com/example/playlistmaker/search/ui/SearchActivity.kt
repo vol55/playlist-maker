@@ -13,25 +13,19 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
-import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
-
-    private lateinit var tracksInteractor: TracksInteractor
-    private lateinit var historyInteractor: SearchHistoryInteractor
 
     private val tracks = ArrayList<Track>()
     private val historyTracks = ArrayList<Track>()
@@ -50,9 +44,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var rvHistory: RecyclerView
     private lateinit var rvTrackList: RecyclerView
 
-    private val viewModel: SearchViewModel by viewModels {
-        SearchViewModel.getFactory(tracksInteractor, historyInteractor)
-    }
+    private val viewModel: SearchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +55,6 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        tracksInteractor = Creator.provideTracksInteractor(this)
-        historyInteractor = Creator.provideSearchHistoryInteractor(this)
 
         progressBar = findViewById(R.id.progressBar)
         noNetworkView = findViewById(R.id.llNoNetwork)

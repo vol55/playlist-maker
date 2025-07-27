@@ -8,8 +8,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
-import com.example.playlistmaker.util.dpToPx
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.util.dpToPx
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
