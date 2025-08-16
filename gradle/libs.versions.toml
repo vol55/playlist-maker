@@ -15,6 +15,7 @@ retrofit = "2.9.0"
 lifecycle = "2.5.1"
 lifecycleViewmodelAndroid = "2.9.2"
 koin = "3.3.0"
+fragmentKtx = "1.5.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,7 @@ lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-view
 activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
 androidx-lifecycle-viewmodel-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-android", version.ref = "lifecycleViewmodelAndroid" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

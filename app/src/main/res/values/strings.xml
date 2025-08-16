@@ -8,8 +8,6 @@
     <string name="share_app">Поделиться приложением</string>
     <string name="contact_support">Написать в поддержку</string>
     <string name="terms_of_use">Пользовательское соглашение</string>
-
-    <!-- SettingsActivity -->
     <string name="share_url">https://practicum.yandex.ru/learn/android-developer-plus</string>
     <string name="message_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
@@ -34,5 +32,9 @@
     <string name="add_to_library">add to library</string>
     <string name="like">like</string>
     <string name="current_time_start">00:00</string>
-
+    <string name="favorites_empty">Ваша медиатека пуста</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="no_playlists_created">Вы не создали\nни одного плейлиста</string>
+    <string name="favorite_tracks">\u00A0\u00A0\u00A0Избранные треки\u00A0\u00A0\u00A0</string>
+    <string name="playlists">\u00A0\u00A0\u00A0Плейлисты\u00A0\u00A0\u00A0</string>
 </resources>
