@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundPrimary"
-    android:orientation="vertical"
-    tools:context=".search.ui.SearchActivity">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/search_activity_toolbar"
@@ -79,12 +78,16 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/track_item" />
 
+    <include
+        android:id="@+id/llNoNetwork"
+        layout="@layout/no_network" />
 
-    <include layout="@layout/no_network" />
+    <include
+        android:id="@+id/llNoResults"
+        layout="@layout/no_results" />
 
-    <include layout="@layout/no_results" />
-
-    <include layout="@layout/search_history" />
-
+    <include
+        android:id="@+id/llSearchHistory"
+        layout="@layout/search_history" />
 
 </LinearLayout>

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundPrimary"
-    android:orientation="vertical"
-    tools:context=".settings.ui.SettingsActivity">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_activity_toolbar"
