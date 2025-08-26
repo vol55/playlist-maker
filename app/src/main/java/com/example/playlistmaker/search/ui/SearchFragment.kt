@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerFragment
@@ -146,9 +147,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun openPlayerFragment(track: Track) {
-        val fragment = PlayerFragment.newInstance(track)
-        parentFragmentManager.beginTransaction().replace(R.id.rootFragmentContainerView, fragment)
-            .addToBackStack(null).commit()
+        val args = PlayerFragment.createArgs(track)
+        findNavController().navigate(R.id.action_searchFragment_to_playerFragment, args)
     }
 
     private fun hideKeyboard() {

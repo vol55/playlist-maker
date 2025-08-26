@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMainBinding
-import com.example.playlistmaker.library.ui.LibraryFragment
-import com.example.playlistmaker.search.ui.SearchFragment
-import com.example.playlistmaker.settings.ui.SettingsFragment
 
 class MainFragment : Fragment() {
 
@@ -35,36 +32,15 @@ class MainFragment : Fragment() {
         }
 
         binding.searchButton.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(
-                    R.id.rootFragmentContainerView,
-                    SearchFragment(),
-                    SearchFragment::class.java.simpleName
-                )
-                addToBackStack(SearchFragment::class.java.simpleName)
-            }
+            findNavController().navigate(R.id.action_mainFragment_to_searchFragment)
         }
 
         binding.libraryButton.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(
-                    R.id.rootFragmentContainerView,
-                    LibraryFragment(),
-                    LibraryFragment::class.java.simpleName
-                )
-                addToBackStack(LibraryFragment::class.java.simpleName)
-            }
+            findNavController().navigate(R.id.action_mainFragment_to_libraryFragment)
         }
 
         binding.settingsButton.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(
-                    R.id.rootFragmentContainerView,
-                    SettingsFragment(),
-                    SettingsFragment::class.java.simpleName
-                )
-                addToBackStack(SettingsFragment::class.java.simpleName)
-            }
+            findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
         }
     }
 }

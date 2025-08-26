@@ -1,12 +1,10 @@
 package com.example.playlistmaker.player.ui
 
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -25,25 +23,13 @@ class PlayerFragment : Fragment() {
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var track: Track
-
-    private val playerViewModel: PlayerViewModel by viewModel { parametersOf(track.previewUrl) }
-
-    companion object {
-        private const val TRACK_JSON = "TRACK_JSON"
-
-        fun newInstance(track: Track): PlayerFragment {
-            val fragment = PlayerFragment()
-            fragment.arguments = bundleOf(TRACK_JSON to Gson().toJson(track))
-            return fragment
-        }
+    private val track: Track by lazy {
+        val trackJson = requireArguments().getString(ARG_TRACK_JSON) ?: ""
+        Gson().fromJson(trackJson, Track::class.java)
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val trackJson = requireArguments().getString(TRACK_JSON) ?: ""
-        track = Gson().fromJson(trackJson, Track::class.java)
+    private val playerViewModel: PlayerViewModel by viewModel {
+        parametersOf(track.previewUrl)
     }
 
     override fun onCreateView(
@@ -53,9 +39,10 @@ class PlayerFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initTrackInfo()
 
         playerViewModel.screenState.observe(viewLifecycleOwner) { state ->
             when (state.playerState) {
@@ -87,8 +74,6 @@ class PlayerFragment : Fragment() {
         binding.toolbarButtonBack.setNavigationOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
-
-        initTrackInfo()
     }
 
     private fun initTrackInfo() {
@@ -128,5 +113,11 @@ class PlayerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val ARG_TRACK_JSON = "track_json"
+
+        fun createArgs(track: Track): Bundle = bundleOf(ARG_TRACK_JSON to Gson().toJson(track))
     }
 }
