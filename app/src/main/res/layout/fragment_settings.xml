@@ -12,7 +12,6 @@
         style="@style/ToolbarStyle"
         android:layout_marginBottom="@dimen/space_8dp"
         app:navigationContentDescription="@string/back"
-        app:navigationIcon="@drawable/back"
         app:navigationIconTint="?attr/textPrimary"
         app:title="@string/settings"
         app:titleTextAppearance="@style/ToolbarTextAppearance"
