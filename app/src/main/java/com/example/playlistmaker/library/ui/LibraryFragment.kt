@@ -34,10 +34,6 @@ class LibraryFragment : Fragment() {
             insets
         }
 
-        binding.materialToolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
         binding.viewPager.adapter = LibraryViewPagerAdapter(
             fragmentManager = childFragmentManager, lifecycle = viewLifecycleOwner.lifecycle
         )

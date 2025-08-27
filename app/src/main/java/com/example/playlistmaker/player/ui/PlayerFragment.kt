@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -72,7 +73,7 @@ class PlayerFragment : Fragment() {
         binding.ibPlayButton.setOnClickListener { playerViewModel.onPlayButtonClicked() }
 
         binding.toolbarButtonBack.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
     }
 

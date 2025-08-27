@@ -56,10 +56,6 @@ class SearchFragment : Fragment() {
         binding.rvTrackList.adapter = trackAdapter
         binding.llSearchHistory.rvTrackHistoryList.adapter = trackHistoryAdapter
 
-        binding.searchActivityToolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
         savedInstanceState?.getString(SEARCH_FIELD_VALUE)?.let { savedQuery ->
             binding.inputField.setText(savedQuery)
             currentQuery = savedQuery

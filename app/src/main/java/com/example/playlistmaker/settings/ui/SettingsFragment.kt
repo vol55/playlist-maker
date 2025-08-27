@@ -26,11 +26,6 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        binding.settingsActivityToolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
         viewModel.observeScreenState().observe(viewLifecycleOwner) { state ->
             binding.smThemeSwitcher.isChecked = state.isDarkTheme
         }
