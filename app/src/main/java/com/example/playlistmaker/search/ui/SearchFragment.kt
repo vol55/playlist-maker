@@ -30,6 +30,8 @@ class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
 
+    private var currentQuery: String = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -60,6 +62,7 @@ class SearchFragment : Fragment() {
 
         savedInstanceState?.getString(SEARCH_FIELD_VALUE)?.let { savedQuery ->
             binding.inputField.setText(savedQuery)
+            currentQuery = savedQuery
             viewModel.setSearchFieldValue(savedQuery)
         }
 
@@ -89,6 +92,7 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
+                currentQuery = query
                 binding.clearButton.isVisible = query.isNotEmpty()
                 viewModel.onSearchQueryChanged(query)
                 binding.llSearchHistory.root.isVisible =
@@ -159,7 +163,7 @@ class SearchFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_FIELD_VALUE, binding.inputField.text.toString())
+        outState.putString(SEARCH_FIELD_VALUE, currentQuery)
     }
 
     override fun onDestroyView() {
@@ -168,6 +172,6 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
-        private const val SEARCH_FIELD_VALUE = ""
+        private const val SEARCH_FIELD_VALUE = "search_field_value"
     }
 }
