@@ -31,16 +31,11 @@ class SettingsFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        val themeSwitcher = binding.smThemeSwitcher
-        val shareOption = binding.shareListOption
-        val contactOption = binding.contactSupportListOption
-        val termsOption = binding.termsOfUseListOption
-
         viewModel.observeScreenState().observe(viewLifecycleOwner) { state ->
-            themeSwitcher.isChecked = state.isDarkTheme
+            binding.smThemeSwitcher.isChecked = state.isDarkTheme
         }
 
-        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+        binding.smThemeSwitcher.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onThemeSwitched(isChecked)
         }
 
@@ -56,11 +51,11 @@ class SettingsFragment : Fragment() {
             startActivity(Intent(Intent.ACTION_VIEW, uri))
         }
 
-        shareOption.setOnClickListener {
+        binding.shareListOption.setOnClickListener {
             viewModel.onShareClicked(getString(R.string.share_url))
         }
 
-        contactOption.setOnClickListener {
+        binding.contactSupportListOption.setOnClickListener {
             viewModel.onContactClicked(
                 email = getString(R.string.my_email),
                 subject = getString(R.string.message_subject),
@@ -68,7 +63,7 @@ class SettingsFragment : Fragment() {
             )
         }
 
-        termsOption.setOnClickListener {
+        binding.termsOfUseListOption.setOnClickListener {
             viewModel.onTermsClicked(getString(R.string.terms_of_use_url))
         }
     }
@@ -77,6 +72,4 @@ class SettingsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }

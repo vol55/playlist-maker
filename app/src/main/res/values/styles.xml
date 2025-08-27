@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="LargeButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_marginHorizontal">@dimen/space_16dp</item>
-        <item name="android:layout_marginVertical">@dimen/space_8dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:backgroundTint">?attr/buttonPrimary</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">?attr/textPrimaryVariant</item>
-        <item name="android:textSize">@dimen/text_header_small</item>
-        <item name="cornerRadius">@dimen/border_radius</item>
-        <item name="iconGravity">textStart</item>
-        <item name="iconPadding">@dimen/space_8dp</item>
-        <item name="iconTint">?attr/textPrimaryVariant</item>
-        <item name="android:fontFamily">@font/ys_display_medium</item>
-    </style>
-
     <style name="SettingOptionWithIcon">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
