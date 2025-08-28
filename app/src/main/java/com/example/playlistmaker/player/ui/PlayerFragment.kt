@@ -106,9 +106,7 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        if (playerViewModel.screenState.value?.playerState == PlayerViewModel.PlayerState.PLAYING) {
-            playerViewModel.onPlayButtonClicked()
-        }
+        playerViewModel.pausePlayerIfNeeded()
     }
 
     override fun onDestroyView() {

@@ -103,6 +103,12 @@ class PlayerViewModel(
         }
     }
 
+    fun pausePlayerIfNeeded() {
+        if (screenStateLiveData.value?.playerState == PlayerState.PLAYING) {
+            pausePlayer()
+        }
+    }
+
     private fun updateState(update: PlayerScreenState.() -> PlayerScreenState) {
         screenStateLiveData.value = (screenStateLiveData.value ?: PlayerScreenState()).update()
     }
