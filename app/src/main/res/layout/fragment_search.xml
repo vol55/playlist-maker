@@ -72,7 +72,7 @@
         android:id="@+id/rvTrackList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/space_20dp"
+        android:layout_marginTop="@dimen/space_20dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/track_item" />
