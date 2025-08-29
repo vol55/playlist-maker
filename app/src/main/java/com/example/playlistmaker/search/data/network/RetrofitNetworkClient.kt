@@ -19,8 +19,13 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = 400 }
         }
 
-        val response = iTunesService.search(dto.expression)
-        return response.apply { resultCode = 200 }
+        return try {
+            val response = iTunesService.search(dto.expression)
+            response.apply { resultCode = 200 }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Response().apply { resultCode = -1 }
+        }
     }
 
     private fun isConnected(): Boolean {

@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.util.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -17,20 +16,8 @@ class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
-    private val stateLiveData = MutableLiveData<SearchState>(SearchState.SearchHistory)
+    private val stateLiveData = MutableLiveData<SearchState>(SearchState.History(emptyList()))
     fun observeState(): LiveData<SearchState> = stateLiveData
-
-    private val openPlayerLiveData = SingleLiveEvent<Track>()
-    fun observeOpenPlayer(): LiveData<Track> = openPlayerLiveData
-
-    fun onTrackClicked(track: Track) {
-        openPlayerLiveData.setValue(track)
-    }
 
     private val handler = Handler(Looper.getMainLooper())
     private var searchRunnable: Runnable? = null
@@ -47,7 +34,7 @@ class SearchViewModel(
         searchRunnable?.let { handler.removeCallbacks(it) }
 
         if (query.isEmpty()) {
-            stateLiveData.postValue(SearchState.SearchHistory)
+            updateHistory()
             return
         }
 
@@ -67,7 +54,7 @@ class SearchViewModel(
                 if (tracks.isEmpty()) {
                     stateLiveData.postValue(SearchState.NoResults)
                 } else {
-                    stateLiveData.postValue(SearchState.Content(tracks))
+                    stateLiveData.postValue(SearchState.Results(tracks))
                 }
             } else {
                 stateLiveData.postValue(SearchState.NotConnected)
@@ -79,7 +66,7 @@ class SearchViewModel(
         searchHistoryInteractor.getHistory(object : SearchHistoryInteractor.HistoryConsumer {
             override fun consume(searchHistory: List<Track>?) {
                 val tracks = searchHistory ?: emptyList()
-                stateLiveData.postValue(SearchState.UpdateSearchHistory(tracks))
+                stateLiveData.postValue(SearchState.History(tracks))
             }
         })
     }
@@ -106,5 +93,10 @@ class SearchViewModel(
     override fun onCleared() {
         super.onCleared()
         searchRunnable?.let { handler.removeCallbacks(it) }
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

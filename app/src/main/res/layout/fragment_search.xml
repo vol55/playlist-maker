@@ -6,15 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundPrimary"
-    android:orientation="vertical"
-    tools:context=".search.ui.SearchActivity">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/search_activity_toolbar"
         style="@style/ToolbarStyle"
         android:layout_marginBottom="@dimen/space_8dp"
         app:navigationContentDescription="@string/back"
-        app:navigationIcon="@drawable/back"
         app:navigationIconTint="?attr/textPrimary"
         app:title="@string/search"
         app:titleTextAppearance="@style/ToolbarTextAppearance"
@@ -74,17 +72,21 @@
         android:id="@+id/rvTrackList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/space_20dp"
+        android:layout_marginTop="@dimen/space_20dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/track_item" />
 
+    <include
+        android:id="@+id/llNoNetwork"
+        layout="@layout/no_network" />
 
-    <include layout="@layout/no_network" />
+    <include
+        android:id="@+id/llNoResults"
+        layout="@layout/no_results" />
 
-    <include layout="@layout/no_results" />
-
-    <include layout="@layout/search_history" />
-
+    <include
+        android:id="@+id/llSearchHistory"
+        layout="@layout/search_history" />
 
 </LinearLayout>

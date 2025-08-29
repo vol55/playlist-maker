@@ -6,15 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundPrimary"
-    android:orientation="vertical"
-    tools:context=".search.ui.SearchActivity">
+    android:orientation="vertical" >
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
         style="@style/ToolbarStyle"
         android:layout_marginBottom="@dimen/space_8dp"
         app:navigationContentDescription="@string/back"
-        app:navigationIcon="@drawable/back"
         app:navigationIconTint="?attr/textPrimary"
         app:title="Медиатека"
         app:titleTextAppearance="@style/ToolbarTextAppearance"
