@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -146,8 +148,9 @@ class SearchFragment : Fragment() {
         views.forEach { it.isVisible = (it == viewToShow) }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun openPlayerFragment(track: Track) {
-        val args = PlayerFragment.createArgs(track)
+        val args = PlayerFragment.createArgs(track.toUi())
         findNavController().navigate(R.id.action_searchFragment_to_playerFragment, args)
     }
 

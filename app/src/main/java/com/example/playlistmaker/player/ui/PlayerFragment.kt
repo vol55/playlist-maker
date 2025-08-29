@@ -1,10 +1,12 @@
 package com.example.playlistmaker.player.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -13,24 +15,23 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.TrackUi
 import com.example.playlistmaker.util.dpToPx
-import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class PlayerFragment : Fragment() {
 
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
 
-    private val track: Track by lazy {
-        val trackJson = requireArguments().getString(ARG_TRACK_JSON) ?: ""
-        Gson().fromJson(trackJson, Track::class.java)
+    private val track: TrackUi? by lazy {
+        requireArguments().getParcelable(ARG_TRACK, TrackUi::class.java)
     }
 
     private val playerViewModel: PlayerViewModel by viewModel {
-        parametersOf(track.previewUrl)
+        parametersOf(track?.previewUrl)
     }
 
     override fun onCreateView(
@@ -42,6 +43,11 @@ class PlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (track == null) {
+            findNavController().navigateUp()
+            return
+        }
 
         initTrackInfo()
 
@@ -78,15 +84,15 @@ class PlayerFragment : Fragment() {
     }
 
     private fun initTrackInfo() {
-        binding.tvTrackTitle.text = track.trackName
-        binding.tvArtistName.text = track.artistName
-        binding.tvTrackDuration.text = track.trackDuration
-        binding.tvCollectionName.text = track.collectionName
-        binding.tvReleaseDate.text = track.trackReleaseYear
-        binding.tvPrimaryGenreName.text = track.primaryGenreName
-        binding.tvCountry.text = track.country
+        binding.tvTrackTitle.text = track?.trackName
+        binding.tvArtistName.text = track?.artistName
+        binding.tvTrackDuration.text = track?.trackDuration
+        binding.tvCollectionName.text = track?.collectionName
+        binding.tvReleaseDate.text = track?.trackReleaseYear
+        binding.tvPrimaryGenreName.text = track?.primaryGenreName
+        binding.tvCountry.text = track?.country
 
-        Glide.with(requireContext()).load(track.coverArtworkUrl).apply(
+        Glide.with(requireContext()).load(track?.coverArtworkUrl).apply(
             RequestOptions().placeholder(R.drawable.placeholder)
                 .transform(RoundedCorners(requireContext().dpToPx(8f)))
         ).into(binding.ivCoverArtwork)
@@ -104,6 +110,7 @@ class PlayerFragment : Fragment() {
         binding.ibPlayButton.setImageResource(value.resourceId)
     }
 
+
     override fun onPause() {
         super.onPause()
         playerViewModel.pausePlayerIfNeeded()
@@ -115,8 +122,8 @@ class PlayerFragment : Fragment() {
     }
 
     companion object {
-        const val ARG_TRACK_JSON = "track_json"
+        const val ARG_TRACK = "track"
 
-        fun createArgs(track: Track): Bundle = bundleOf(ARG_TRACK_JSON to Gson().toJson(track))
+        fun createArgs(track: TrackUi): Bundle = bundleOf(ARG_TRACK to track)
     }
 }
