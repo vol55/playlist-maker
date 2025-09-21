@@ -16,7 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.search.ui.TrackUi
-import com.example.playlistmaker.util.dpToPx
+import com.example.playlistmaker.utils.dpToPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
