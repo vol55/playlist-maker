@@ -48,16 +48,17 @@ class SearchViewModel(
         stateLiveData.postValue(SearchState.Loading)
 
         viewModelScope.launch {
-            val result = tracksInteractor.searchTracks(query)
-            if (result.isSuccess) {
-                val tracks = result.getOrThrow()
-                if (tracks.isEmpty()) {
-                    stateLiveData.postValue(SearchState.NoResults)
+            tracksInteractor.searchTracks(query).collect { result ->
+                if (result.isSuccess) {
+                    val tracks = result.getOrThrow()
+                    if (tracks.isEmpty()) {
+                        stateLiveData.postValue(SearchState.NoResults)
+                    } else {
+                        stateLiveData.postValue(SearchState.Results(tracks))
+                    }
                 } else {
-                    stateLiveData.postValue(SearchState.Results(tracks))
+                    stateLiveData.postValue(SearchState.NotConnected)
                 }
-            } else {
-                stateLiveData.postValue(SearchState.NotConnected)
             }
         }
     }
