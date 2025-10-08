@@ -33,7 +33,7 @@ class PlayerFragment : Fragment() {
     }
 
     private val playerViewModel: PlayerViewModel by viewModel {
-        parametersOf(track?.previewUrl)
+        parametersOf(track)
     }
 
     override fun onCreateView(
@@ -81,10 +81,15 @@ class PlayerFragment : Fragment() {
                     setPlayIcon()
                 }
             }
+
             binding.tvCurrentTime.text = state.progressTime
+            setLikeIcon(state.isFavorite)
         }
 
         binding.ibPlayButton.setOnClickListener { playerViewModel.onPlayButtonClicked() }
+        binding.likeButton.setOnClickListener {
+            playerViewModel.onFavoriteClicked()
+        }
 
         binding.toolbarButtonBack.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -118,6 +123,10 @@ class PlayerFragment : Fragment() {
         binding.ibPlayButton.setImageResource(value.resourceId)
     }
 
+    private fun setLikeIcon(isFavorite: Boolean) {
+        val drawableRes = if (isFavorite) R.drawable.liked else R.drawable.like
+        binding.likeButton.setImageResource(drawableRes)
+    }
 
     override fun onPause() {
         super.onPause()
