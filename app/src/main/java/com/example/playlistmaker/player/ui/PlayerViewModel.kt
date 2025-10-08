@@ -1,38 +1,29 @@
 package com.example.playlistmaker.player.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.PlayerInteractor
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerViewModel(
-    private val url: String,
-    private val playerInteractor: PlayerInteractor
+    private val url: String, private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
 
     enum class PlayerState {
         DEFAULT, PREPARED, PLAYING, PAUSED
     }
 
-    companion object {
-        private const val DELAY = 500L
-    }
-
     private val screenStateLiveData = MutableLiveData(PlayerScreenState())
     val screenState: LiveData<PlayerScreenState> = screenStateLiveData
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var timerJob: Job? = null
 
-    private val timerRunnable: Runnable = Runnable {
-        if (screenStateLiveData.value?.playerState == PlayerState.PLAYING) {
-            updateProgress()
-            handler.postDelayed(timerRunnable, DELAY)
-        }
-    }
 
     init {
         preparePlayer()
@@ -78,13 +69,17 @@ class PlayerViewModel(
     }
 
     private fun startTimer() {
-        handler.removeCallbacks(timerRunnable)
-        updateProgress()
-        handler.postDelayed(timerRunnable, DELAY)
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
+            while (screenStateLiveData.value?.playerState == PlayerState.PLAYING) {
+                updateProgress()
+                delay(DELAY)
+            }
+        }
     }
 
     private fun pauseTimer() {
-        handler.removeCallbacks(timerRunnable)
+        timerJob?.cancel()
     }
 
     private fun resetTimer() {
@@ -111,5 +106,9 @@ class PlayerViewModel(
 
     private fun updateState(update: PlayerScreenState.() -> PlayerScreenState) {
         screenStateLiveData.value = (screenStateLiveData.value ?: PlayerScreenState()).update()
+    }
+
+    companion object {
+        private const val DELAY = 300L
     }
 }

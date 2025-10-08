@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.ThemeInteractor
-import com.example.playlistmaker.util.SingleLiveEvent
+import com.example.playlistmaker.utils.SingleLiveEvent
 
 class SettingsViewModel(
     private val themeInteractor: ThemeInteractor

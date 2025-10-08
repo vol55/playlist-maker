@@ -10,13 +10,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -41,19 +45,27 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackAdapter = TrackAdapter(tracks) { track ->
-            if (viewModel.clickDebounce()) {
-                viewModel.saveTrackToHistory(track)
-                openPlayerFragment(track)
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
 
-        trackHistoryAdapter = TrackAdapter(historyTracks) { track ->
-            if (viewModel.clickDebounce()) openPlayerFragment(track)
+        onTrackClickDebounce = debounce(
+            CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false
+        ) { track ->
+            viewModel.saveTrackToHistory(track)
+            openPlayerFragment(track)
         }
+
+        trackAdapter = TrackAdapter(tracks) { track -> onTrackClickDebounce(track) }
+        trackHistoryAdapter = TrackAdapter(historyTracks) { track -> onTrackClickDebounce(track) }
 
         binding.rvTrackList.adapter = trackAdapter
         binding.llSearchHistory.rvTrackHistoryList.adapter = trackHistoryAdapter
@@ -103,7 +115,7 @@ class SearchFragment : Fragment() {
 
         binding.inputField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.onSearchQueryChanged(binding.inputField.text.toString(), 0)
+                viewModel.performSearch(binding.inputField.text.toString())
                 hideKeyboard()
                 true
             } else false
@@ -130,7 +142,7 @@ class SearchFragment : Fragment() {
         }
 
         binding.llNoNetwork.bvNoNetworkRetry.setOnClickListener {
-            viewModel.onSearchQueryChanged(binding.inputField.text.toString(), 0)
+            viewModel.performSearch(binding.inputField.text.toString())
         }
 
         viewModel.updateHistory()
@@ -172,5 +184,6 @@ class SearchFragment : Fragment() {
 
     companion object {
         private const val SEARCH_FIELD_VALUE = "search_field_value"
+        private const val CLICK_DEBOUNCE_DELAY = 0L
     }
 }
