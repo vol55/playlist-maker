@@ -34,10 +34,8 @@ class PlayerViewModel(
     init {
         preparePlayer()
         viewModelScope.launch {
-            favoriteTracksInteractorImpl.getTracks().collect { favoriteTracks ->
-                    val isTrackInDb = favoriteTracks.any { it.trackId == track.trackId }
-                    updateState { copy(isFavorite = isTrackInDb) }
-                }
+            val isFavorite = favoriteTracksInteractorImpl.isFavorite(track.trackId)
+            updateState { copy(isFavorite = isFavorite) }
         }
     }
 
