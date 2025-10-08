@@ -2,6 +2,7 @@ package com.example.playlistmaker.utils
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.library.data.db.di.dataModule
 import com.example.playlistmaker.library.di.libraryModule
 import com.example.playlistmaker.player.di.playerModule
 import com.example.playlistmaker.search.di.searchModule
@@ -20,6 +21,7 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             modules(
+                dataModule,
                 playerModule,
                 settingsModule,
                 searchModule,

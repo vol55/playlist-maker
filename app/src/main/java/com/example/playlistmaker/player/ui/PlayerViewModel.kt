@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.library.domain.FavoriteTracksInteractorImpl
 import com.example.playlistmaker.player.domain.PlayerInteractor
+import com.example.playlistmaker.search.ui.TrackUi
+import com.example.playlistmaker.search.ui.toDomain
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -12,14 +15,17 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerViewModel(
-    private val url: String, private val playerInteractor: PlayerInteractor
+    private val track: TrackUi,
+    private val playerInteractor: PlayerInteractor,
+    private val favoriteTracksInteractorImpl: FavoriteTracksInteractorImpl
 ) : ViewModel() {
 
     enum class PlayerState {
         DEFAULT, PREPARED, PLAYING, PAUSED
     }
 
-    private val screenStateLiveData = MutableLiveData(PlayerScreenState())
+    private val screenStateLiveData =
+        MutableLiveData(PlayerScreenState(isFavorite = track.isFavorite))
     val screenState: LiveData<PlayerScreenState> = screenStateLiveData
 
     private var timerJob: Job? = null
@@ -27,7 +33,28 @@ class PlayerViewModel(
 
     init {
         preparePlayer()
+        viewModelScope.launch {
+            favoriteTracksInteractorImpl.getTracks().collect { favoriteTracks ->
+                    val isTrackInDb = favoriteTracks.any { it.trackId == track.trackId }
+                    updateState { copy(isFavorite = isTrackInDb) }
+                }
+        }
     }
+
+    fun onFavoriteClicked() {
+        viewModelScope.launch {
+            val currentFavorite = screenStateLiveData.value?.isFavorite ?: false
+
+            if (currentFavorite) {
+                favoriteTracksInteractorImpl.removeTrack(track.toDomain())
+            } else {
+                favoriteTracksInteractorImpl.addTrack(track.toDomain())
+            }
+
+            updateState { copy(isFavorite = !currentFavorite) }
+        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()
@@ -44,15 +71,10 @@ class PlayerViewModel(
     }
 
     private fun preparePlayer() {
-        playerInteractor.prepare(url, {
-            screenStateLiveData.value = PlayerScreenState(
-                playerState = PlayerState.PREPARED,
-                progressTime = screenStateLiveData.value?.progressTime ?: "00:00"
-            )
+        playerInteractor.prepare(track.previewUrl, {
+            updateState { copy(playerState = PlayerState.PREPARED) }
         }, {
-            screenStateLiveData.value = PlayerScreenState(
-                playerState = PlayerState.PREPARED, progressTime = "00:00"
-            )
+            updateState { copy(playerState = PlayerState.PREPARED, progressTime = "00:00") }
         })
     }
 

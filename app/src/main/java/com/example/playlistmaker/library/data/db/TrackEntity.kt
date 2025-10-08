@@ -1,19 +1,20 @@
-package com.example.playlistmaker.search.ui
+package com.example.playlistmaker.library.data.db
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Parcelize
-data class TrackUi(
+@Entity(tableName = "favorite_tracks")
+data class TrackEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val trackId: Int,
     val trackName: String,
     val artistName: String,
     val trackDuration: String,
+    val artworkUrl100: String,
     val coverArtworkUrl: String,
     val collectionName: String,
     val trackReleaseYear: String,
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String,
-    var isFavorite: Boolean = false
-) : Parcelable
+)
