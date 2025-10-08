@@ -26,4 +26,8 @@ class FavoriteTracksRepositoryImpl(
             entities.map { it.toDomain() }
         }
     }
+
+    override suspend fun isFavorite(trackId: Int): Boolean {
+        return appDatabase.trackDao().isFavorite(trackId)
+    }
 }

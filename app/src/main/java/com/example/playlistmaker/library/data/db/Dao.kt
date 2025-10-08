@@ -17,4 +17,7 @@ interface TrackDao {
 
     @Query("SELECT * FROM favorite_tracks ORDER BY id DESC")
     fun getTracks(): Flow<List<TrackEntity>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM favorite_tracks WHERE trackId = :trackId)")
+    suspend fun isFavorite(trackId: Int): Boolean
 }
