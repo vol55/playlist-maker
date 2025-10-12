@@ -1,6 +1,7 @@
 package com.example.playlistmaker.library.di
 
 import com.example.playlistmaker.library.data.FavoriteTracksRepositoryImpl
+import com.example.playlistmaker.library.domain.FavoriteTracksInteractor
 import com.example.playlistmaker.library.domain.FavoriteTracksInteractorImpl
 import com.example.playlistmaker.library.domain.FavoriteTracksRepository
 import com.example.playlistmaker.library.ui.FavoritesViewModel
@@ -17,7 +18,7 @@ val libraryModule = module {
         FavoriteTracksRepositoryImpl(get())
     }
 
-    factory {
+    factory<FavoriteTracksInteractor> {
         FavoriteTracksInteractorImpl(get())
     }
 }

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.library.domain.FavoriteTracksInteractorImpl
+import com.example.playlistmaker.library.domain.FavoriteTracksInteractor
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.search.ui.TrackUi
 import com.example.playlistmaker.search.ui.toDomain
@@ -17,7 +17,7 @@ import java.util.Locale
 class PlayerViewModel(
     private val track: TrackUi,
     private val playerInteractor: PlayerInteractor,
-    private val favoriteTracksInteractorImpl: FavoriteTracksInteractorImpl
+    private val favoriteTracksInteractor: FavoriteTracksInteractor
 ) : ViewModel() {
 
     enum class PlayerState {
@@ -34,7 +34,7 @@ class PlayerViewModel(
     init {
         preparePlayer()
         viewModelScope.launch {
-            val isFavorite = favoriteTracksInteractorImpl.isFavorite(track.trackId)
+            val isFavorite = favoriteTracksInteractor.isFavorite(track.trackId)
             updateState { copy(isFavorite = isFavorite) }
         }
     }
@@ -44,9 +44,9 @@ class PlayerViewModel(
             val currentFavorite = screenStateLiveData.value?.isFavorite ?: false
 
             if (currentFavorite) {
-                favoriteTracksInteractorImpl.removeTrack(track.toDomain())
+                favoriteTracksInteractor.removeTrack(track.toDomain())
             } else {
-                favoriteTracksInteractorImpl.addTrack(track.toDomain())
+                favoriteTracksInteractor.addTrack(track.toDomain())
             }
 
             updateState { copy(isFavorite = !currentFavorite) }
