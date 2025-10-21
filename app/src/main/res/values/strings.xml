@@ -37,4 +37,8 @@
     <string name="no_playlists_created">Вы не создали\nни одного плейлиста</string>
     <string name="favorite_tracks">\u00A0\u00A0\u00A0Избранные треки\u00A0\u00A0\u00A0</string>
     <string name="playlists">\u00A0\u00A0\u00A0Плейлисты\u00A0\u00A0\u00A0</string>
+    <string name="add_photo">add photo</string>
+    <string name="create">Создать</string>
+    <string name="description">Описание</string>
+    <string name="label_title">Название*</string>
 </resources>
