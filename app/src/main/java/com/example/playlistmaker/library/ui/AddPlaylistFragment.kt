@@ -16,10 +16,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
-import com.example.playlistmaker.utils.dpToPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddPlaylistFragment : Fragment() {
@@ -33,7 +31,7 @@ class AddPlaylistFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
             if (uri != null) {
                 addPlaylistViewModel.onImageSelected(uri)
-                showImage(uri)
+                Glide.with(requireContext()).load(uri).into(binding.playlistImage)
                 addPlaylistViewModel.saveImageToPrivateStorage(requireContext())
             }
         }
@@ -87,11 +85,6 @@ class AddPlaylistFragment : Fragment() {
 
             findNavController().navigateUp()
         }
-    }
-
-    private fun showImage(uri: Uri) {
-        Glide.with(requireContext()).load(uri)
-            .transform(RoundedCorners(requireContext().dpToPx(8f))).into(binding.playlistImage)
     }
 
     private fun handleBackPressed() {
