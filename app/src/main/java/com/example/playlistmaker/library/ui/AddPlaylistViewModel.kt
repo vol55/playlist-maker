@@ -52,9 +52,6 @@ class AddPlaylistViewModel(
         return _name.isNotBlank() || _description.isNotBlank() || _imageUri != null
     }
 
-    fun getImageUri(): Uri? = _imageUri
-    fun getName(): String = _name
-
     fun saveImageToPrivateStorage(context: Context): File? {
         val uri = _imageUri ?: return null
 
