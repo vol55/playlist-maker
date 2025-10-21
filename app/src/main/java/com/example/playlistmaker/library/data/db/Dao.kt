@@ -21,3 +21,9 @@ interface TrackDao {
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_tracks WHERE trackId = :trackId)")
     suspend fun isFavorite(trackId: Int): Boolean
 }
+
+@Dao
+interface PlaylistDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPlaylist(playlist: PlaylistEntity)
+}

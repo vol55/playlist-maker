@@ -78,10 +78,13 @@ class AddPlaylistFragment : Fragment() {
         }
 
         binding.buttonSave.setOnClickListener {
-            val playlistName = addPlaylistViewModel.getName()
+            val playlistName = addPlaylistViewModel.name
+            addPlaylistViewModel.createPlaylist(requireContext())
+
             Toast.makeText(
                 requireContext(), "Плейлист \"$playlistName\" создан", Toast.LENGTH_SHORT
             ).show()
+
             findNavController().navigateUp()
         }
     }
