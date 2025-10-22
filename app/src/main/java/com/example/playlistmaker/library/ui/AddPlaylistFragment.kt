@@ -1,6 +1,7 @@
 package com.example.playlistmaker.library.ui
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,9 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
@@ -18,8 +21,10 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
+import com.example.playlistmaker.search.ui.TrackUi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class AddPlaylistFragment : Fragment() {
 
     private val addPlaylistViewModel: AddPlaylistViewModel by viewModel()
@@ -36,12 +41,17 @@ class AddPlaylistFragment : Fragment() {
             }
         }
 
+    private val track: TrackUi? by lazy {
+        requireArguments().getParcelable(ARG_TRACK, TrackUi::class.java)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,9 +89,13 @@ class AddPlaylistFragment : Fragment() {
             val playlistName = addPlaylistViewModel.name
             addPlaylistViewModel.createPlaylist(requireContext())
 
-            Toast.makeText(
-                requireContext(), "Плейлист \"$playlistName\" создан", Toast.LENGTH_SHORT
-            ).show()
+            val message = if (track != null) {
+                "Добавлено в плейлист \"$playlistName\""
+            } else {
+                "Плейлист \"$playlistName\" создан"
+            }
+
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 
             findNavController().navigateUp()
         }
@@ -109,5 +123,10 @@ class AddPlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val ARG_TRACK = "track"
+        fun createArgs(track: TrackUi) = bundleOf(ARG_TRACK to track)
     }
 }
