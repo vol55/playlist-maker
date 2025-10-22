@@ -1,6 +1,6 @@
 package com.example.playlistmaker.library.data.db
 
-import com.example.playlistmaker.player.domain.Playlist
+import com.example.playlistmaker.library.domain.Playlist
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

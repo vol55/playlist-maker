@@ -1,6 +1,6 @@
 package com.example.playlistmaker.library.domain
 
-import com.example.playlistmaker.player.domain.Playlist
+import kotlinx.coroutines.flow.Flow
 
 
 class PlaylistsInteractorImpl(
@@ -9,5 +9,9 @@ class PlaylistsInteractorImpl(
 
     override suspend fun addPlaylist(playlist: Playlist) {
         repository.addPlaylist(playlist)
+    }
+
+    override fun getPlaylists(): Flow<List<Playlist>> {
+        return repository.getPlaylists()
     }
 }

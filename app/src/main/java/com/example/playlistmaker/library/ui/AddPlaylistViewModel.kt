@@ -8,8 +8,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.library.domain.Playlist
 import com.example.playlistmaker.library.domain.PlaylistsInteractor
-import com.example.playlistmaker.player.domain.Playlist
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream

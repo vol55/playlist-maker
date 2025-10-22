@@ -1,4 +1,4 @@
-package com.example.playlistmaker.player.domain
+package com.example.playlistmaker.library.domain
 
 data class Playlist(
     val id: Int,
