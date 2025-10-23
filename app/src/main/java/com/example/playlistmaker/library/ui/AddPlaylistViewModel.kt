@@ -19,34 +19,31 @@ class AddPlaylistViewModel(
     private val playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
 
-    private var _name = ""
-    private var _description = ""
-    private var _imageUri: Uri? = null
-
     private val _screenState = MutableLiveData(AddPlaylistScreenState())
     val screenState: LiveData<AddPlaylistScreenState> = _screenState
 
     fun onNameChanged(name: String) {
-        _name = name
+        _screenState.value = _screenState.value?.copy(name = name)
         _screenState.value = _screenState.value?.copy(isNameValid = name.isNotBlank())
     }
 
     fun onDescriptionChanged(description: String) {
-        _description = description
+        _screenState.value = _screenState.value?.copy(description = description)
     }
 
     fun onImageSelected(uri: Uri?, context: Context) {
-        _imageUri = uri
-        val file = saveImageToPrivateStorage(context)
+        if (uri == null) return
+        val file = saveImageToPrivateStorage(context, uri)
+
+        _screenState.value = _screenState.value?.copy(imageUri = uri)
         _screenState.value = _screenState.value?.copy(imageFile = file)
     }
 
     fun hasUnsavedChanges(): Boolean {
-        return _name.isNotBlank() || _description.isNotBlank() || _imageUri != null
+        return _screenState.value?.isNameValid == true || _screenState.value?.description?.isNotBlank() == true || _screenState.value?.imageUri != null
     }
 
-    fun saveImageToPrivateStorage(context: Context): File? {
-        val uri = _imageUri ?: return null
+    fun saveImageToPrivateStorage(context: Context, uri: Uri): File? {
         val filePath = File(
             context.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES), "playlists"
         )
@@ -57,18 +54,21 @@ class AddPlaylistViewModel(
                 BitmapFactory.decodeStream(input).compress(Bitmap.CompressFormat.JPEG, 90, output)
             }
         }
+
         return file
     }
 
     suspend fun createPlaylist(context: Context): Int {
-        val imageFile = saveImageToPrivateStorage(context)
+        val uri = _screenState.value?.imageUri
+        val imageFile = uri?.let { saveImageToPrivateStorage(context, it) }
         val playlist = Playlist(
             id = 0,
-            title = _name,
-            description = _description,
+            title = _screenState.value?.name.orEmpty(),
+            description = _screenState.value?.description,
             coverImagePath = imageFile?.absolutePath,
             trackCount = 0
         )
+
         return playlistsInteractor.addPlaylist(playlist)
     }
 
@@ -78,9 +78,9 @@ class AddPlaylistViewModel(
 
     fun notifyPlaylistCreated(context: Context, track: TrackUi?) {
         val message = if (track != null) {
-            context.getString(R.string.add_playlist_track_added, _name)
+            context.getString(R.string.add_playlist_track_added, _screenState.value?.name)
         } else {
-            context.getString(R.string.add_playlist_created, _name)
+            context.getString(R.string.add_playlist_created, _screenState.value?.name)
         }
         _screenState.value = _screenState.value?.copy(toastMessage = message, navigateUp = true)
     }
