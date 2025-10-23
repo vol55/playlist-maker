@@ -42,7 +42,7 @@ class AddPlaylistFragment : Fragment() {
         }
 
     private val track: TrackUi? by lazy {
-        requireArguments().getParcelable(ARG_TRACK, TrackUi::class.java)
+        arguments?.getParcelable(ARG_TRACK, TrackUi::class.java)
     }
 
     override fun onCreateView(
