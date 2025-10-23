@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -21,6 +20,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.library.ui.AddPlaylistFragment
 import com.example.playlistmaker.search.ui.TrackUi
+import com.example.playlistmaker.utils.showCustomToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -114,9 +114,16 @@ class PlayerFragment : Fragment() {
             binding.root.findViewById<LinearLayout>(R.id.playlists_bottom_sheet)
         val overlay = binding.root.findViewById<View>(R.id.overlay)
 
+        val displayMetrics = resources.displayMetrics
+        val bottomSheetHeight = (displayMetrics.heightPixels * 0.6).toInt()
+
+        bottomSheetContainer.layoutParams.height = bottomSheetHeight
+        bottomSheetContainer.requestLayout()
+
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
             isHideable = true
+            peekHeight = bottomSheetHeight
         }
 
         val playlistsRecyclerView = bottomSheetContainer.findViewById<RecyclerView>(R.id.playlists)
@@ -128,7 +135,7 @@ class PlayerFragment : Fragment() {
                     } else {
                         "Трек уже есть в плейлисте \"${playlist.title}\""
                     }
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    showCustomToast(requireContext(), message)
                 }
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }

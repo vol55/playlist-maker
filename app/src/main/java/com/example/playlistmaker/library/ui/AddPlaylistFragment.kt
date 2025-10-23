@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +23,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.example.playlistmaker.search.ui.TrackUi
 import com.example.playlistmaker.search.ui.toDomain
+import com.example.playlistmaker.utils.showCustomToast
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -105,11 +105,12 @@ class AddPlaylistFragment : Fragment() {
                     "Плейлист \"$playlistName\" создан"
                 }
 
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                showCustomToast(binding.root.context, message)
                 findNavController().navigateUp()
             }
         }
     }
+
 
     private fun handleBackPressed() {
         if (addPlaylistViewModel.hasUnsavedChanges()) {
