@@ -11,6 +11,7 @@
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_14sp">14sp</dimen>
     <dimen name="text_13sp">13sp</dimen>
+    <dimen name="text_12sp">12sp</dimen>
     <dimen name="text_size_small">11sp</dimen>
 
     <dimen name="border_radius">16dp</dimen>
