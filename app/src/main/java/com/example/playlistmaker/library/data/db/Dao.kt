@@ -25,8 +25,23 @@ interface TrackDao {
 @Dao
 interface PlaylistDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlaylist(playlist: PlaylistEntity)
+    suspend fun insertPlaylist(playlist: PlaylistEntity): Long
 
     @Query("SELECT * FROM playlists ORDER BY id DESC")
     fun getPlaylists(): Flow<List<PlaylistEntity>>
+
+    @Query("UPDATE playlists SET trackCount = :count WHERE id = :playlistId")
+    suspend fun updateTrackCount(playlistId: Int, count: Int)
+}
+
+@Dao
+interface PlaylistTracksDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertTrack(track: PlaylistTrackEntity)
+
+    @Query("SELECT COUNT(*) FROM playlist_tracks WHERE playlistId = :playlistId")
+    suspend fun getTrackCountForPlaylist(playlistId: Int): Int
+
+    @Query("SELECT EXISTS(SELECT 1 FROM playlist_tracks WHERE playlistId = :playlistId AND trackId = :trackId)")
+    suspend fun isTrackInPlaylist(playlistId: Int, trackId: Int): Boolean
 }

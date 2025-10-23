@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -121,9 +122,18 @@ class PlayerFragment : Fragment() {
         val playlistsRecyclerView = bottomSheetContainer.findViewById<RecyclerView>(R.id.playlists)
         playlistsAdapter = PlaylistsAdapter { playlist ->
             track?.let { currentTrack ->
+                playerViewModel.addTrackToPlaylist(playlist.id) { added ->
+                    val message = if (added) {
+                        "Добавлено в плейлист \"${playlist.title}\""
+                    } else {
+                        "Трек уже есть в плейлисте \"${playlist.title}\""
+                    }
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
+
         playlistsRecyclerView.adapter = playlistsAdapter
 
         bottomSheetBehavior.addBottomSheetCallback(object :

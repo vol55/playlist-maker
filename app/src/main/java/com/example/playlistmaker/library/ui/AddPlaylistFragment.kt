@@ -17,11 +17,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
 import com.example.playlistmaker.search.ui.TrackUi
+import com.example.playlistmaker.search.ui.toDomain
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -87,17 +90,24 @@ class AddPlaylistFragment : Fragment() {
 
         binding.buttonSave.setOnClickListener {
             val playlistName = addPlaylistViewModel.name
-            addPlaylistViewModel.createPlaylist(requireContext())
 
-            val message = if (track != null) {
-                "Добавлено в плейлист \"$playlistName\""
-            } else {
-                "Плейлист \"$playlistName\" создан"
+            viewLifecycleOwner.lifecycleScope.launch {
+                val playlistId = addPlaylistViewModel.createPlaylist(requireContext())
+
+                track?.let { trackUi ->
+                    val track = trackUi.toDomain()
+                    addPlaylistViewModel.addTrackToPlaylist(track, playlistId)
+                }
+
+                val message = if (track != null) {
+                    "Добавлено в плейлист \"$playlistName\""
+                } else {
+                    "Плейлист \"$playlistName\" создан"
+                }
+
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
             }
-
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-
-            findNavController().navigateUp()
         }
     }
 

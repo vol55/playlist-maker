@@ -7,10 +7,9 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.library.domain.Playlist
-import com.example.playlistmaker.library.domain.PlaylistsInteractor
-import kotlinx.coroutines.launch
+import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
+import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.search.domain.models.Track
 import java.io.File
 import java.io.FileOutputStream
 
@@ -69,18 +68,19 @@ class AddPlaylistViewModel(
         return file
     }
 
-    fun createPlaylist(context: Context) {
-        viewModelScope.launch {
-            val imageFile = saveImageToPrivateStorage(context)
-            val playlist = Playlist(
-                id = 0,
-                title = _name,
-                description = _description,
-                coverImagePath = imageFile?.absolutePath,
-                trackIds = emptyList(),
-                trackCount = 0
-            )
-            playlistsInteractor.addPlaylist(playlist)
-        }
+    suspend fun createPlaylist(context: Context): Int {
+        val imageFile = saveImageToPrivateStorage(context)
+        val playlist = Playlist(
+            id = 0,
+            title = _name,
+            description = _description,
+            coverImagePath = imageFile?.absolutePath,
+            trackCount = 0
+        )
+        return playlistsInteractor.addPlaylist(playlist)
+    }
+
+    suspend fun addTrackToPlaylist(track: Track, playlistId: Int) {
+        playlistsInteractor.addTrack(track, playlistId)
     }
 }

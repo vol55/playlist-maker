@@ -3,7 +3,7 @@ package com.example.playlistmaker.library.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.playlistmaker.library.domain.PlaylistsInteractor
+import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import kotlinx.coroutines.flow.map
 
 

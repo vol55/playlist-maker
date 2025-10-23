@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.library.domain.FavoriteTracksInteractor
-import com.example.playlistmaker.library.domain.PlaylistsInteractor
+import com.example.playlistmaker.library.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.search.ui.TrackUi
 import com.example.playlistmaker.search.ui.toDomain
@@ -52,6 +52,19 @@ class PlayerViewModel(
                 favoriteTracksInteractor.addTrack(track.toDomain())
             }
             updateState { copy(isFavorite = !currentFavorite) }
+        }
+    }
+
+    fun addTrackToPlaylist(playlistId: Int, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val trackDomain = track.toDomain()
+            val exists = playlistsInteractor.isTrackInPlaylist(playlistId, trackDomain.trackId)
+            if (exists) {
+                onResult(false)
+            } else {
+                playlistsInteractor.addTrack(trackDomain, playlistId)
+                onResult(true)
+            }
         }
     }
 

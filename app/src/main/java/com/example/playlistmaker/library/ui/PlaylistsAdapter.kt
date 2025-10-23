@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.library.domain.Playlist
+import com.example.playlistmaker.library.domain.models.Playlist
 
 class PlaylistsAdapter(
     val playlists: MutableList<Playlist>

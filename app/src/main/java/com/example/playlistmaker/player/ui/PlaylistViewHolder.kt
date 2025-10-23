@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
-import com.example.playlistmaker.library.domain.Playlist
+import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.utils.dpToPx
 
 class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -23,9 +23,9 @@ class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         playlist.coverImagePath?.let { coverPath ->
             Glide.with(itemView.context).load(coverPath).apply(
-                    RequestOptions().placeholder(R.drawable.placeholder)
-                        .transform(RoundedCorners(itemView.context.dpToPx(8f)))
-                ).into(cover)
+                RequestOptions().placeholder(R.drawable.placeholder)
+                    .transform(RoundedCorners(itemView.context.dpToPx(8f)))
+            ).into(cover)
         } ?: run {
             cover.setImageResource(R.drawable.placeholder)
         }

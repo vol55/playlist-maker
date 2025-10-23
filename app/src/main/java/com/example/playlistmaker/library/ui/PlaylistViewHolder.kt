@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.library.domain.Playlist
+import com.example.playlistmaker.library.domain.models.Playlist
 
 class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 

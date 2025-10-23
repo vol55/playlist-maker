@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.ui
 
-import com.example.playlistmaker.library.domain.Playlist
+import com.example.playlistmaker.library.domain.models.Playlist
 
 data class PlayerScreenState(
     val playerState: PlayerViewModel.PlayerState = PlayerViewModel.PlayerState.DEFAULT,

@@ -2,12 +2,12 @@ package com.example.playlistmaker.library.di
 
 import com.example.playlistmaker.library.data.FavoriteTracksRepositoryImpl
 import com.example.playlistmaker.library.data.PlaylistsRepositoryImpl
-import com.example.playlistmaker.library.domain.FavoriteTracksInteractor
-import com.example.playlistmaker.library.domain.FavoriteTracksInteractorImpl
-import com.example.playlistmaker.library.domain.FavoriteTracksRepository
-import com.example.playlistmaker.library.domain.PlaylistsInteractor
-import com.example.playlistmaker.library.domain.PlaylistsInteractorImpl
-import com.example.playlistmaker.library.domain.PlaylistsRepository
+import com.example.playlistmaker.library.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.library.domain.api.FavoriteTracksRepository
+import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
+import com.example.playlistmaker.library.domain.api.PlaylistsRepository
+import com.example.playlistmaker.library.domain.impl.FavoriteTracksInteractorImpl
+import com.example.playlistmaker.library.domain.impl.PlaylistsInteractorImpl
 import com.example.playlistmaker.library.ui.AddPlaylistViewModel
 import com.example.playlistmaker.library.ui.FavoritesViewModel
 import com.example.playlistmaker.library.ui.PlaylistsViewModel

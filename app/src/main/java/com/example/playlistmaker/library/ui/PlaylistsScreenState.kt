@@ -1,6 +1,6 @@
 package com.example.playlistmaker.library.ui
 
-import com.example.playlistmaker.library.domain.Playlist
+import com.example.playlistmaker.library.domain.models.Playlist
 
 sealed class PlaylistsScreenState {
     object Empty : PlaylistsScreenState()
