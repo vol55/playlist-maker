@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 
 
 class PlaylistsViewModel(
-    private val playlistsInteractor: PlaylistsInteractor
+    playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
 
     val screenState: LiveData<PlaylistsScreenState> =

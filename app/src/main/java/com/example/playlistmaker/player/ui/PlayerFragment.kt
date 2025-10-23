@@ -131,9 +131,9 @@ class PlayerFragment : Fragment() {
             track?.let { currentTrack ->
                 playerViewModel.addTrackToPlaylist(playlist.id) { added ->
                     val message = if (added) {
-                        "Добавлено в плейлист \"${playlist.title}\""
+                        getString(R.string.player_track_added, playlist.title)
                     } else {
-                        "Трек уже есть в плейлисте \"${playlist.title}\""
+                        getString(R.string.player_track_exists, playlist.title)
                     }
                     showCustomToast(requireContext(), message)
                 }

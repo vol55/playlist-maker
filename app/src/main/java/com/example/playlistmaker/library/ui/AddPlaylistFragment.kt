@@ -35,17 +35,14 @@ class AddPlaylistFragment : Fragment() {
     private var _binding: FragmentAddPlaylistBinding? = null
     private val binding get() = _binding!!
 
-    private val pickImage =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
-            if (uri != null) {
-                addPlaylistViewModel.onImageSelected(uri)
-                Glide.with(requireContext()).load(uri).into(binding.playlistImage)
-                addPlaylistViewModel.saveImageToPrivateStorage(requireContext())
-            }
-        }
-
     private val track: TrackUi? by lazy {
         arguments?.getParcelable(ARG_TRACK, TrackUi::class.java)
+    }
+
+    private val pickImage = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let { addPlaylistViewModel.onImageSelected(it, requireContext()) }
     }
 
     override fun onCreateView(
@@ -54,7 +51,6 @@ class AddPlaylistFragment : Fragment() {
         _binding = FragmentAddPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,11 +69,21 @@ class AddPlaylistFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { handleBackPressed() }
 
         addPlaylistViewModel.screenState.observe(viewLifecycleOwner) { state ->
-            val isEnabled = state is AddPlaylistScreenState.ValidName
-            binding.buttonSave.isEnabled = isEnabled
+            binding.buttonSave.isEnabled = state.isNameValid
             binding.buttonSave.backgroundTintList = ContextCompat.getColorStateList(
-                requireContext(), if (isEnabled) R.color.yandex_blue else R.color.yandex_gray
+                requireContext(),
+                if (state.isNameValid) R.color.yandex_blue else R.color.yandex_gray
             )
+
+            state.imageFile?.let {
+                Glide.with(requireContext()).load(it).into(binding.playlistImage)
+            }
+
+            state.toastMessage?.let {
+                showCustomToast(binding.root.context, it)
+            }
+
+            if (state.navigateUp) findNavController().navigateUp()
         }
 
         binding.playlistTitleInput.addTextChangedListener {
@@ -89,28 +95,13 @@ class AddPlaylistFragment : Fragment() {
         }
 
         binding.buttonSave.setOnClickListener {
-            val playlistName = addPlaylistViewModel.name
-
             viewLifecycleOwner.lifecycleScope.launch {
                 val playlistId = addPlaylistViewModel.createPlaylist(requireContext())
-
-                track?.let { trackUi ->
-                    val track = trackUi.toDomain()
-                    addPlaylistViewModel.addTrackToPlaylist(track, playlistId)
-                }
-
-                val message = if (track != null) {
-                    "Добавлено в плейлист \"$playlistName\""
-                } else {
-                    "Плейлист \"$playlistName\" создан"
-                }
-
-                showCustomToast(binding.root.context, message)
-                findNavController().navigateUp()
+                track?.let { addPlaylistViewModel.addTrackToPlaylist(it.toDomain(), playlistId) }
+                addPlaylistViewModel.notifyPlaylistCreated(binding.root.context, track)
             }
         }
     }
-
 
     private fun handleBackPressed() {
         if (addPlaylistViewModel.hasUnsavedChanges()) {
@@ -122,10 +113,10 @@ class AddPlaylistFragment : Fragment() {
 
     private fun showExitConfirmationDialog() {
         com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Завершить создание плейлиста?")
-            .setMessage("Все несохраненные данные будут потеряны")
-            .setNegativeButton("Отмена") { dialog, _ -> dialog.dismiss() }
-            .setPositiveButton("Завершить") { dialog, _ ->
+            .setTitle(R.string.add_playlist_exit_title)
+            .setMessage(R.string.add_playlist_exit_message)
+            .setNegativeButton(R.string.add_playlist_exit_cancel) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(R.string.add_playlist_exit_confirm) { dialog, _ ->
                 dialog.dismiss()
                 findNavController().navigateUp()
             }.show()

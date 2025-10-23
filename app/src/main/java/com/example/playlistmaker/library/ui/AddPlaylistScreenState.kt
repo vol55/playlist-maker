@@ -1,6 +1,10 @@
 package com.example.playlistmaker.library.ui
 
-sealed class AddPlaylistScreenState {
-    object EmptyName : AddPlaylistScreenState()
-    object ValidName : AddPlaylistScreenState()
-}
+import java.io.File
+
+data class AddPlaylistScreenState(
+    val isNameValid: Boolean = false,
+    val imageFile: File? = null,
+    val toastMessage: String? = null,
+    val navigateUp: Boolean = false
+)
