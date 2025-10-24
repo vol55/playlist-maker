@@ -96,7 +96,7 @@ class AddPlaylistFragment : Fragment() {
 
         binding.buttonSave.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
-                val playlistId = addPlaylistViewModel.createPlaylist(requireContext())
+                val playlistId = addPlaylistViewModel.createPlaylist()
                 track?.let { addPlaylistViewModel.addTrackToPlaylist(it.toDomain(), playlistId) }
                 addPlaylistViewModel.notifyPlaylistCreated(binding.root.context, track)
             }

@@ -5,6 +5,7 @@ import com.example.playlistmaker.library.domain.api.PlaylistsRepository
 import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 
 class PlaylistsInteractorImpl(
@@ -25,5 +26,9 @@ class PlaylistsInteractorImpl(
 
     override suspend fun isTrackInPlaylist(playlistId: Int, trackId: Int): Boolean {
         return repository.isTrackInPlaylist(playlistId, trackId)
+    }
+
+    override fun saveCover(uri: Any): File? {
+        return repository.saveCover(uri)
     }
 }

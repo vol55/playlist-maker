@@ -1,5 +1,10 @@
 package com.example.playlistmaker.library.data
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Environment
 import com.example.playlistmaker.library.data.db.PlaylistDao
 import com.example.playlistmaker.library.data.db.PlaylistTracksDao
 import com.example.playlistmaker.library.data.db.mappers.toDomain
@@ -10,11 +15,14 @@ import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.io.File
+import java.io.FileOutputStream
 
 
 class PlaylistsRepositoryImpl(
     private val playlistDao: PlaylistDao,
-    private val playlistTracksDao: PlaylistTracksDao
+    private val playlistTracksDao: PlaylistTracksDao,
+    private val context: Context
 ) : PlaylistsRepository {
 
     override suspend fun addPlaylist(playlist: Playlist): Int {
@@ -36,5 +44,20 @@ class PlaylistsRepositoryImpl(
 
     override suspend fun isTrackInPlaylist(playlistId: Int, trackId: Int): Boolean {
         return playlistTracksDao.isTrackInPlaylist(playlistId, trackId)
+    }
+
+    override fun saveCover(uri: Any): File? {
+        val filePath = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlists"
+        )
+        if (!filePath.exists()) filePath.mkdirs()
+
+        val file = File(filePath, "playlist_cover_${System.currentTimeMillis()}.jpg")
+        context.contentResolver.openInputStream(uri as Uri).use { input ->
+            FileOutputStream(file).use { output ->
+                BitmapFactory.decodeStream(input).compress(Bitmap.CompressFormat.JPEG, 90, output)
+            }
+        }
+        return file
     }
 }

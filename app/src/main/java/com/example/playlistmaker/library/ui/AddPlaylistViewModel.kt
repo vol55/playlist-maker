@@ -1,8 +1,6 @@
 package com.example.playlistmaker.library.ui
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +11,6 @@ import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackUi
 import java.io.File
-import java.io.FileOutputStream
 
 class AddPlaylistViewModel(
     private val playlistsInteractor: PlaylistsInteractor
@@ -33,7 +30,7 @@ class AddPlaylistViewModel(
 
     fun onImageSelected(uri: Uri?, context: Context) {
         if (uri == null) return
-        val file = saveImageToPrivateStorage(context, uri)
+        val file = saveCover(uri)
 
         _screenState.value = _screenState.value?.copy(imageUri = uri)
         _screenState.value = _screenState.value?.copy(imageFile = file)
@@ -43,24 +40,13 @@ class AddPlaylistViewModel(
         return _screenState.value?.isNameValid == true || _screenState.value?.description?.isNotBlank() == true || _screenState.value?.imageUri != null
     }
 
-    fun saveImageToPrivateStorage(context: Context, uri: Uri): File? {
-        val filePath = File(
-            context.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES), "playlists"
-        )
-        if (!filePath.exists()) filePath.mkdirs()
-        val file = File(filePath, "playlist_cover_${System.currentTimeMillis()}.jpg")
-        context.contentResolver.openInputStream(uri).use { input ->
-            FileOutputStream(file).use { output ->
-                BitmapFactory.decodeStream(input).compress(Bitmap.CompressFormat.JPEG, 90, output)
-            }
-        }
-
-        return file
+    fun saveCover(uri: Uri): File? {
+        return playlistsInteractor.saveCover(uri)
     }
 
-    suspend fun createPlaylist(context: Context): Int {
+    suspend fun createPlaylist(): Int {
         val uri = _screenState.value?.imageUri
-        val imageFile = uri?.let { saveImageToPrivateStorage(context, it) }
+        val imageFile = uri?.let { saveCover(it) }
         val playlist = Playlist(
             id = 0,
             title = _screenState.value?.name.orEmpty(),

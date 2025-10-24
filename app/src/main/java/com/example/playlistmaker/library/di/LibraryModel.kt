@@ -29,7 +29,7 @@ val libraryModule = module {
     }
 
     single<PlaylistsRepository> {
-        PlaylistsRepositoryImpl(get(), get())
+        PlaylistsRepositoryImpl(get(), get(), get())
     }
 
     factory<PlaylistsInteractor> {
