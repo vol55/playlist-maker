@@ -16,7 +16,12 @@ class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bind(playlist: Playlist) {
         playlistTitle.text = playlist.title
-        trackCount.text = "${playlist.trackCount} треков"
+
+        val resources = itemView.resources
+        val trackCountText = resources.getQuantityString(
+            R.plurals.track_count, playlist.trackCount, playlist.trackCount
+        )
+        trackCount.text = trackCountText
 
         if (!playlist.coverImagePath.isNullOrEmpty()) {
             playlistImage.setImageURI(playlist.coverImagePath.toUri())
