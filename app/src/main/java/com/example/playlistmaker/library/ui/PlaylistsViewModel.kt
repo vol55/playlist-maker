@@ -1,5 +1,19 @@
 package com.example.playlistmaker.library.ui
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
+import kotlinx.coroutines.flow.map
 
-class PlaylistsViewModel : ViewModel() {}
+
+class PlaylistsViewModel(
+    playlistsInteractor: PlaylistsInteractor
+) : ViewModel() {
+
+    val screenState: LiveData<PlaylistsScreenState> =
+        playlistsInteractor.getPlaylists().map { playlists ->
+            if (playlists.isEmpty()) PlaylistsScreenState.Empty
+            else PlaylistsScreenState.Content(playlists)
+        }.asLiveData()
+}

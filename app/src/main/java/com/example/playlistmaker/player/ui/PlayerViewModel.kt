@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.library.domain.FavoriteTracksInteractorImpl
+import com.example.playlistmaker.library.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.player.domain.PlayerInteractor
 import com.example.playlistmaker.search.ui.TrackUi
 import com.example.playlistmaker.search.ui.toDomain
@@ -17,54 +18,67 @@ import java.util.Locale
 class PlayerViewModel(
     private val track: TrackUi,
     private val playerInteractor: PlayerInteractor,
-    private val favoriteTracksInteractorImpl: FavoriteTracksInteractorImpl
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private val playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
 
-    enum class PlayerState {
-        DEFAULT, PREPARED, PLAYING, PAUSED
-    }
+    enum class PlayerState { DEFAULT, PREPARED, PLAYING, PAUSED }
 
-    private val screenStateLiveData =
-        MutableLiveData(PlayerScreenState(isFavorite = track.isFavorite))
-    val screenState: LiveData<PlayerScreenState> = screenStateLiveData
+    private val _screenState = MutableLiveData(PlayerScreenState(isFavorite = track.isFavorite))
+    val screenState: LiveData<PlayerScreenState> = _screenState
 
     private var timerJob: Job? = null
-
 
     init {
         preparePlayer()
         viewModelScope.launch {
-            val isFavorite = favoriteTracksInteractorImpl.isFavorite(track.trackId)
+            val isFavorite = favoriteTracksInteractor.isFavorite(track.trackId)
             updateState { copy(isFavorite = isFavorite) }
+        }
+
+        viewModelScope.launch {
+            playlistsInteractor.getPlaylists().collect { playlists ->
+                updateState { copy(playlists = playlists) }
+            }
         }
     }
 
     fun onFavoriteClicked() {
         viewModelScope.launch {
-            val currentFavorite = screenStateLiveData.value?.isFavorite ?: false
-
+            val currentFavorite = _screenState.value?.isFavorite ?: false
             if (currentFavorite) {
-                favoriteTracksInteractorImpl.removeTrack(track.toDomain())
+                favoriteTracksInteractor.removeTrack(track.toDomain())
             } else {
-                favoriteTracksInteractorImpl.addTrack(track.toDomain())
+                favoriteTracksInteractor.addTrack(track.toDomain())
             }
-
             updateState { copy(isFavorite = !currentFavorite) }
         }
     }
 
-
-    override fun onCleared() {
-        super.onCleared()
-        playerInteractor.release()
-        resetTimer()
+    fun addTrackToPlaylist(playlistId: Int, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val trackDomain = track.toDomain()
+            val exists = playlistsInteractor.isTrackInPlaylist(playlistId, trackDomain.trackId)
+            if (exists) {
+                onResult(false)
+            } else {
+                playlistsInteractor.addTrack(trackDomain, playlistId)
+                onResult(true)
+            }
+        }
     }
 
     fun onPlayButtonClicked() {
-        when (screenStateLiveData.value?.playerState) {
+        when (_screenState.value?.playerState) {
             PlayerState.PLAYING -> pausePlayer()
             PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
             else -> {}
+        }
+    }
+
+    fun pausePlayerIfNeeded() {
+        if (_screenState.value?.playerState == PlayerState.PLAYING) {
+            pausePlayer()
         }
     }
 
@@ -91,7 +105,7 @@ class PlayerViewModel(
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            while (screenStateLiveData.value?.playerState == PlayerState.PLAYING) {
+            while (_screenState.value?.playerState == PlayerState.PLAYING) {
                 updateProgress()
                 delay(DELAY)
             }
@@ -118,14 +132,14 @@ class PlayerViewModel(
         }
     }
 
-    fun pausePlayerIfNeeded() {
-        if (screenStateLiveData.value?.playerState == PlayerState.PLAYING) {
-            pausePlayer()
-        }
+    private fun updateState(update: PlayerScreenState.() -> PlayerScreenState) {
+        _screenState.value = (_screenState.value ?: PlayerScreenState()).update()
     }
 
-    private fun updateState(update: PlayerScreenState.() -> PlayerScreenState) {
-        screenStateLiveData.value = (screenStateLiveData.value ?: PlayerScreenState()).update()
+    override fun onCleared() {
+        super.onCleared()
+        playerInteractor.release()
+        resetTimer()
     }
 
     companion object {

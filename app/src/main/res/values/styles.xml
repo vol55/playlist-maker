@@ -83,4 +83,19 @@
         <item name="fontFamily">@font/ys_display_regular</item>
     </style>
 
+    <style name="Widget.Playlist.TextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Playlist.Rounded8dp</item>
+        <item name="boxBackgroundColor">?attr/backgroundPrimary</item>
+        <item name="boxStrokeColor">@color/playlist_input_outline</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="hintTextColor">@color/yandex_gray</item>
+        <item name="android:textColor">?attr/textPrimary</item>
+        <item name="android:textCursorDrawable">@drawable/textedit_cursor</item>
+    </style>
+
+    <style name="ShapeAppearance.Playlist.Rounded8dp" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
 </resources>

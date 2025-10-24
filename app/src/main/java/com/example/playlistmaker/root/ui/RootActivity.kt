@@ -25,8 +25,13 @@ class RootActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
+        val hiddenBotNavScreens = setOf(
+            R.id.playerFragment, R.id.addPlaylistFragment
+        )
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            binding.bottomNavigationView.isVisible = destination.id != R.id.playerFragment
+            binding.bottomNavigationView.isVisible = destination.id !in hiddenBotNavScreens
+            binding.bottomNavigationBorder.isVisible = destination.id !in hiddenBotNavScreens
         }
 
         onBackPressedDispatcher.addCallback(this) {

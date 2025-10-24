@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 
@@ -20,4 +21,34 @@ interface TrackDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_tracks WHERE trackId = :trackId)")
     suspend fun isFavorite(trackId: Int): Boolean
+}
+
+
+@Dao
+interface PlaylistDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPlaylist(playlist: PlaylistEntity): Long
+
+    @Query("SELECT * FROM playlists ORDER BY id DESC")
+    fun getPlaylists(): Flow<List<PlaylistEntity>>
+
+    @Query("UPDATE playlists SET trackCount = :count WHERE id = :playlistId")
+    suspend fun updateTrackCount(playlistId: Int, count: Int)
+
+    @Transaction
+    @Query("SELECT * FROM playlists ORDER BY id DESC")
+    fun getPlaylistsWithTracks(): Flow<List<PlaylistWithTracks>>
+}
+
+@Dao
+interface PlaylistTracksDao {
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertTrack(track: PlaylistTrackEntity)
+
+    @Query("SELECT COUNT(*) FROM playlist_tracks WHERE playlistId = :playlistId")
+    suspend fun getTrackCountForPlaylist(playlistId: Int): Int
+
+    @Query("SELECT EXISTS(SELECT 1 FROM playlist_tracks WHERE playlistId = :playlistId AND trackId = :trackId)")
+    suspend fun isTrackInPlaylist(playlistId: Int, trackId: Int): Boolean
 }

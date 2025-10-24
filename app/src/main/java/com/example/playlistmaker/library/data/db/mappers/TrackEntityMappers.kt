@@ -1,6 +1,7 @@
-package com.example.playlistmaker.library.data.db
+package com.example.playlistmaker.library.data.db.mappers
 
 
+import com.example.playlistmaker.library.data.db.TrackEntity
 import com.example.playlistmaker.search.domain.models.Track
 
 fun Track.toEntity(): TrackEntity {
