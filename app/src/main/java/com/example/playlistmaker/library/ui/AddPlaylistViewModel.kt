@@ -28,7 +28,7 @@ class AddPlaylistViewModel(
         _screenState.value = _screenState.value?.copy(description = description)
     }
 
-    fun onImageSelected(uri: Uri?, context: Context) {
+    fun onImageSelected(uri: Uri?) {
         if (uri == null) return
         val file = saveCover(uri)
 

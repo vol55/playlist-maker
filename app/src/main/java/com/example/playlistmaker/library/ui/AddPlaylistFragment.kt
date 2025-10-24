@@ -42,7 +42,7 @@ class AddPlaylistFragment : Fragment() {
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
-        uri?.let { addPlaylistViewModel.onImageSelected(it, requireContext()) }
+        uri?.let { addPlaylistViewModel.onImageSelected(it) }
     }
 
     override fun onCreateView(
