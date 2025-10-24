@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Environment
 import com.example.playlistmaker.library.data.db.PlaylistDao
 import com.example.playlistmaker.library.data.db.PlaylistTracksDao
+import com.example.playlistmaker.library.data.db.PlaylistWithTracks
 import com.example.playlistmaker.library.data.db.mappers.toDomain
 import com.example.playlistmaker.library.data.db.mappers.toEntity
 import com.example.playlistmaker.library.data.db.mappers.toPlaylistTrackEntity
@@ -59,5 +60,9 @@ class PlaylistsRepositoryImpl(
             }
         }
         return file
+    }
+
+    override fun getPlaylistsWithTracks(): Flow<List<PlaylistWithTracks>> {
+        return playlistDao.getPlaylistsWithTracks()
     }
 }

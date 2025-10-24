@@ -1,5 +1,6 @@
 package com.example.playlistmaker.library.domain.impl
 
+import com.example.playlistmaker.library.data.db.PlaylistWithTracks
 import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.library.domain.api.PlaylistsRepository
 import com.example.playlistmaker.library.domain.models.Playlist
@@ -30,5 +31,9 @@ class PlaylistsInteractorImpl(
 
     override fun saveCover(uri: Any): File? {
         return repository.saveCover(uri)
+    }
+
+    override fun getPlaylistsWithTracks(): Flow<List<PlaylistWithTracks>> {
+        return repository.getPlaylistsWithTracks()
     }
 }
