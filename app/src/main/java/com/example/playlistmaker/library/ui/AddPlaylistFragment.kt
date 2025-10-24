@@ -76,7 +76,8 @@ class AddPlaylistFragment : Fragment() {
             )
 
             state.imageFile?.let {
-                Glide.with(requireContext()).load(it).into(binding.playlistImage)
+                Glide.with(requireContext()).load(it).centerCrop().into(binding.playlistImage)
+                binding.playlistFrame.foreground = null
             }
 
             state.toastMessage?.let {
