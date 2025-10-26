@@ -8,6 +8,7 @@ data class TrackUi(
     val trackId: Int,
     val trackName: String,
     val artistName: String,
+    val trackTimeMillis: Int,
     val trackDuration: String,
     val coverArtworkUrl: String,
     val collectionName: String,

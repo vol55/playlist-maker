@@ -37,8 +37,8 @@ interface PlaylistDao {
     suspend fun updateTrackCount(playlistId: Int, count: Int)
 
     @Transaction
-    @Query("SELECT * FROM playlists ORDER BY id DESC")
-    fun getPlaylistsWithTracks(): Flow<List<PlaylistWithTracks>>
+    @Query("SELECT * FROM playlists WHERE id = :playlistId")
+    fun getPlaylistWithTracks(playlistId: Int): Flow<PlaylistWithTracksEntity>
 }
 
 @Dao

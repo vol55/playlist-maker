@@ -24,6 +24,7 @@ class TracksInteractorImpl(
                             dto.trackId,
                             dto.trackName,
                             dto.artistName,
+                            dto.trackTimeMillis,
                             dto.getDuration(),
                             dto.artworkUrl100,
                             dto.getCoverArtwork(),

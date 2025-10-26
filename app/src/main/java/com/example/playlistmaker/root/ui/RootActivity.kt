@@ -26,7 +26,7 @@ class RootActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
 
         val hiddenBotNavScreens = setOf(
-            R.id.playerFragment, R.id.addPlaylistFragment
+            R.id.playerFragment, R.id.addPlaylistFragment, R.id.playlistDetailsFragment
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

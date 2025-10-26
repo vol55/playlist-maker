@@ -29,7 +29,14 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playlistsAdapter = PlaylistsAdapter(mutableListOf())
+        playlistsAdapter = PlaylistsAdapter(mutableListOf()) { playlist ->
+            val bundle = Bundle().apply {
+                putInt("playlistId", playlist.id)
+            }
+            findNavController().navigate(
+                R.id.action_libraryFragment_to_playlistDetailsFragment, bundle
+            )
+        }
         binding.playlistsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.playlistsRecyclerView.adapter = playlistsAdapter
 

@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.library.domain.models.Playlist
 
-class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class PlaylistViewHolder(
+    view: View, private val onClick: (Playlist) -> Unit
+) : RecyclerView.ViewHolder(view) {
 
     private val playlistImage: ImageView = view.findViewById(R.id.playlistImage)
     private val playlistTitle: TextView = view.findViewById(R.id.playlistTitle)
@@ -27,6 +29,10 @@ class PlaylistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             playlistImage.setImageURI(playlist.coverImagePath.toUri())
         } else {
             playlistImage.setImageResource(R.drawable.placeholder)
+        }
+
+        itemView.setOnClickListener {
+            onClick(playlist)
         }
     }
 }

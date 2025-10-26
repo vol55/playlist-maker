@@ -7,13 +7,13 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.library.domain.models.Playlist
 
 class PlaylistsAdapter(
-    val playlists: MutableList<Playlist>
+    val playlists: MutableList<Playlist>, private val onItemClick: (Playlist) -> Unit
 ) : RecyclerView.Adapter<PlaylistViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.playlist_item, parent, false)
-        return PlaylistViewHolder(view)
+        return PlaylistViewHolder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {

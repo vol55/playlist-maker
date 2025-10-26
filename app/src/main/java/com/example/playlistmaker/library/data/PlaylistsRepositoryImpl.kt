@@ -7,12 +7,12 @@ import android.net.Uri
 import android.os.Environment
 import com.example.playlistmaker.library.data.db.PlaylistDao
 import com.example.playlistmaker.library.data.db.PlaylistTracksDao
-import com.example.playlistmaker.library.data.db.PlaylistWithTracks
 import com.example.playlistmaker.library.data.db.mappers.toDomain
 import com.example.playlistmaker.library.data.db.mappers.toEntity
 import com.example.playlistmaker.library.data.db.mappers.toPlaylistTrackEntity
 import com.example.playlistmaker.library.domain.api.PlaylistsRepository
 import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.library.domain.models.PlaylistWithTracks
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -62,7 +62,9 @@ class PlaylistsRepositoryImpl(
         return file
     }
 
-    override fun getPlaylistsWithTracks(): Flow<List<PlaylistWithTracks>> {
-        return playlistDao.getPlaylistsWithTracks()
+    override fun getPlaylistWithTracks(playlistId: Int): Flow<PlaylistWithTracks> {
+        return playlistDao.getPlaylistWithTracks(playlistId).map { it.toDomain() }
     }
+
+
 }
