@@ -17,6 +17,7 @@ class PlaylistDetailsViewModel(
     data class ScreenState(
         val playlistName: String? = null,
         val imageFile: File? = null,
+        val description: String? = null,
         val minutes: Int? = null,
         val trackCount: Int? = null,
         val tracks: List<Track> = emptyList(),
@@ -37,6 +38,7 @@ class PlaylistDetailsViewModel(
                 ScreenState(
                     playlistName = playlistWithTracks.playlist.title,
                 imageFile = playlistWithTracks.playlist.coverImagePath?.let { File(it) },
+                description = playlistWithTracks.playlist.description,
                 minutes = tracks.sumOf { it.trackTimeMillis } / 1000 / 60,
                 trackCount = tracks.size,
                 tracks = tracks))

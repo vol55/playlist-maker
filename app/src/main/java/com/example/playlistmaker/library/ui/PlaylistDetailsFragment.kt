@@ -50,6 +50,7 @@ class PlaylistDetailsFragment : Fragment() {
 
         viewModel.screenState.observe(viewLifecycleOwner) { screenState ->
             binding.title.text = screenState.playlistName ?: ""
+            binding.description.text = screenState.description ?: ""
             screenState.imageFile?.let { binding.playlistImage.setImageURI(Uri.fromFile(it)) }
 
             val minutes = resources.getQuantityString(
@@ -58,7 +59,8 @@ class PlaylistDetailsFragment : Fragment() {
             val trackCount = resources.getQuantityString(
                 R.plurals.track_count, screenState.trackCount ?: 0, screenState.trackCount ?: 0
             )
-            binding.misc.text = "$minutes • $trackCount"
+            val duration = "$minutes • $trackCount"
+            binding.misc.text = duration
 
             trackList.clear()
             trackList.addAll(screenState.tracks)
