@@ -43,6 +43,10 @@ class PlaylistsRepositoryImpl(
         playlistDao.updateTrackCount(playlistId, count)
     }
 
+    override suspend fun removeTrack(trackId: Int, playlistId: Int) {
+        playlistTracksDao.deleteTrack(playlistId, trackId)
+    }
+
     override suspend fun isTrackInPlaylist(playlistId: Int, trackId: Int): Boolean {
         return playlistTracksDao.isTrackInPlaylist(playlistId, trackId)
     }

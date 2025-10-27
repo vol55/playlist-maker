@@ -44,4 +44,9 @@ class PlaylistDetailsViewModel(
                 tracks = tracks))
         }
     }
+
+    suspend fun removeTrack(playlistId: Int, track: Track) {
+        playlistsInteractor.removeTrack(playlistId, track.trackId)
+    }
+
 }

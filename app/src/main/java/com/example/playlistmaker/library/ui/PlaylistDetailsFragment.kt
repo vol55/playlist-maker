@@ -19,6 +19,7 @@ import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.toUi
 import com.example.playlistmaker.utils.debounce
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistDetailsFragment : Fragment() {
@@ -30,6 +31,7 @@ class PlaylistDetailsFragment : Fragment() {
     private val trackList = ArrayList<Track>()
     private lateinit var trackAdapter: PlaylistDetailsTrackAdapter
     private lateinit var onTrackClick: (Track) -> Unit
+    private lateinit var onTrackLongClick: (Track) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -48,6 +50,8 @@ class PlaylistDetailsFragment : Fragment() {
             insets
         }
 
+        val playlistId = arguments?.getInt("playlistId") ?: return
+
         onTrackClick = debounce(
             CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false
         ) { track ->
@@ -58,13 +62,19 @@ class PlaylistDetailsFragment : Fragment() {
 
         }
 
-        trackAdapter = PlaylistDetailsTrackAdapter(trackList) { track -> onTrackClick(track) }
+        onTrackLongClick = { track ->
+            showDeleteConfirmationDialog(playlistId, track)
+        }
+
+        trackAdapter = PlaylistDetailsTrackAdapter(
+            trackList,
+            onItemClick = { track -> onTrackClick(track) },
+            onItemLongClick = { track -> onTrackLongClick(track) })
         binding.trackList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = trackAdapter
         }
 
-        val playlistId = arguments?.getInt("playlistId") ?: return
         viewModel.loadPlaylist(playlistId)
 
         viewModel.screenState.observe(viewLifecycleOwner) { screenState ->
@@ -89,6 +99,19 @@ class PlaylistDetailsFragment : Fragment() {
         binding.toolbarButtonBack.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+    }
+
+    private fun showDeleteConfirmationDialog(playlistId: Int, track: Track) {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setMessage(getString(R.string.delete_treck_dialogue))
+            .setNegativeButton(getString(R.string.no_capitals)) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(getString(R.string.yes_capitals)) { dialog, _ ->
+                lifecycleScope.launch {
+                    viewModel.removeTrack(playlistId, track)
+                }
+                viewModel.loadPlaylist(playlistId)
+                dialog.dismiss()
+            }.show()
     }
 
     override fun onDestroyView() {

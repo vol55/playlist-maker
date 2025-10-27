@@ -46,6 +46,9 @@ interface PlaylistTracksDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTrack(track: PlaylistTrackEntity)
 
+    @Query("DELETE FROM playlist_tracks WHERE playlistId = :playlistId AND trackId = :trackId")
+    suspend fun deleteTrack(playlistId: Int, trackId: Int)
+
     @Query("SELECT COUNT(*) FROM playlist_tracks WHERE playlistId = :playlistId")
     suspend fun getTrackCountForPlaylist(playlistId: Int): Int
 

@@ -25,6 +25,10 @@ class PlaylistsInteractorImpl(
         repository.addTrack(track, playlistId)
     }
 
+    override suspend fun removeTrack(playlistId: Int, trackId: Int) {
+        repository.removeTrack(trackId, playlistId)
+    }
+
     override suspend fun isTrackInPlaylist(playlistId: Int, trackId: Int): Boolean {
         return repository.isTrackInPlaylist(playlistId, trackId)
     }
