@@ -17,6 +17,10 @@ class PlaylistsInteractorImpl(
         return repository.addPlaylist(playlist)
     }
 
+    override suspend fun removePlaylist(playlistId: Int) {
+        repository.removePlaylist(playlistId)
+    }
+
     override fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylists()
     }

@@ -84,7 +84,7 @@
             app:srcCompat="@drawable/share_button" />
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/buttonDetails"
+            android:id="@+id/buttonOptions"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="16dp"
@@ -107,6 +107,53 @@
         app:behavior_peekHeight="300dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <LinearLayout
+            android:id="@+id/optionsBottomsheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_24dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/playlistBottomsheet"
+                layout="@layout/playlist_item_bottomsheet" />
+
+            <TextView
+                android:id="@+id/shareTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/space_24dp"
+                android:fontFamily="@font/ys_display_regular"
+                android:text="@string/share"
+                android:textColor="?attr/foreground"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:id="@+id/editPlaylist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/space_24dp"
+                android:fontFamily="@font/ys_display_regular"
+                android:text="@string/edit"
+                android:textColor="?attr/foreground"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:id="@+id/removePlaylist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/space_24dp"
+                android:fontFamily="@font/ys_display_regular"
+                android:text="@string/remove_playlist"
+                android:textColor="?attr/foreground"
+                android:textSize="@dimen/text_size_medium" />
+
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/trackList"
@@ -117,6 +164,6 @@
             android:paddingBottom="16dp"
             tools:listitem="@layout/track_item" />
 
-    </LinearLayout>
 
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

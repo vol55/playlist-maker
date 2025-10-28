@@ -31,6 +31,10 @@ class PlaylistsRepositoryImpl(
         return id.toInt()
     }
 
+    override suspend fun removePlaylist(playlistId: Int) {
+        playlistDao.deletePlaylist(playlistId)
+    }
+
     override fun getPlaylists(): Flow<List<Playlist>> {
         return playlistDao.getPlaylists().map { entities ->
             entities.map { it.toDomain() }
@@ -45,6 +49,8 @@ class PlaylistsRepositoryImpl(
 
     override suspend fun removeTrack(trackId: Int, playlistId: Int) {
         playlistTracksDao.deleteTrack(playlistId, trackId)
+        val count = playlistTracksDao.getTrackCountForPlaylist(playlistId)
+        playlistDao.updateTrackCount(playlistId, count)
     }
 
     override suspend fun isTrackInPlaylist(playlistId: Int, trackId: Int): Boolean {

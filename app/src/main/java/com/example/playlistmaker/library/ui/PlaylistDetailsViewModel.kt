@@ -1,5 +1,6 @@
 package com.example.playlistmaker.library.ui
 
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,7 @@ class PlaylistDetailsViewModel(
         val minutes: Int? = null,
         val trackCount: Int? = null,
         val tracks: List<Track> = emptyList(),
+        val shareText: String? = null
     )
 
     private val _screenState = MutableLiveData<ScreenState>(
@@ -36,7 +38,7 @@ class PlaylistDetailsViewModel(
 
             _screenState.postValue(
                 ScreenState(
-                    playlistName = playlistWithTracks.playlist.title,
+                playlistName = playlistWithTracks.playlist.title,
                 imageFile = playlistWithTracks.playlist.coverImagePath?.let { File(it) },
                 description = playlistWithTracks.playlist.description,
                 minutes = tracks.sumOf { it.trackTimeMillis } / 1000 / 60,
@@ -47,6 +49,22 @@ class PlaylistDetailsViewModel(
 
     suspend fun removeTrack(playlistId: Int, track: Track) {
         playlistsInteractor.removeTrack(playlistId, track.trackId)
+    }
+
+    suspend fun removePlaylist(playlistId: Int) {
+        playlistsInteractor.removePlaylist(playlistId)
+    }
+
+    fun sharePlaylist(shareText: String) {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+        _screenState.postValue(_screenState.value?.copy(shareText = shareText))
+    }
+
+    fun clearShareText() {
+        _screenState.value = _screenState.value?.copy(shareText = null)
     }
 
 }

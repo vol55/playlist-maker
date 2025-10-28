@@ -1,5 +1,6 @@
 package com.example.playlistmaker.library.ui
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,6 +21,7 @@ import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.toUi
 import com.example.playlistmaker.utils.debounce
+import com.example.playlistmaker.utils.showCustomToast
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -49,6 +52,8 @@ class PlaylistDetailsFragment : Fragment() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
+
+        val playlistBottomSheetBinding = binding.playlistBottomsheet
 
         val playlistId = arguments?.getInt("playlistId") ?: return
 
@@ -82,6 +87,18 @@ class PlaylistDetailsFragment : Fragment() {
             binding.description.text = screenState.description ?: ""
             screenState.imageFile?.let { binding.playlistImage.setImageURI(Uri.fromFile(it)) }
 
+            screenState.imageFile?.let {
+                playlistBottomSheetBinding.cover.setImageURI(
+                    Uri.fromFile(
+                        it
+                    )
+                )
+            }
+            playlistBottomSheetBinding.title.text = screenState.playlistName ?: ""
+            playlistBottomSheetBinding.count.text = resources.getQuantityString(
+                R.plurals.track_count, screenState.trackCount ?: 0, screenState.trackCount ?: 0
+            )
+
             val minutes = resources.getQuantityString(
                 R.plurals.minutes_count, screenState.minutes ?: 0, screenState.minutes ?: 0
             )
@@ -94,24 +111,95 @@ class PlaylistDetailsFragment : Fragment() {
             trackList.clear()
             trackList.addAll(screenState.tracks)
             trackAdapter.notifyDataSetChanged()
+
+            screenState.shareText?.let { text ->
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, text)
+                }
+                startActivity(Intent.createChooser(intent, null))
+                viewModel.clearShareText()
+            }
         }
 
         binding.toolbarButtonBack.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.buttonShare.setOnClickListener { onShareClick() }
+
+        binding.buttonOptions.setOnClickListener {
+            toggleOptionsBottomSheet()
+        }
+
+        binding.shareTextView.setOnClickListener { onShareClick() }
+        binding.editPlaylist.setOnClickListener { onEditPlaylistClick(playlistId) }
+        binding.removePlaylist.setOnClickListener { onRemovePlaylistClick(playlistId) }
     }
 
     private fun showDeleteConfirmationDialog(playlistId: Int, track: Track) {
         com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-            .setMessage(getString(R.string.delete_treck_dialogue))
+            .setMessage(getString(R.string.delete_track_dialogue))
             .setNegativeButton(getString(R.string.no_capitals)) { dialog, _ -> dialog.dismiss() }
             .setPositiveButton(getString(R.string.yes_capitals)) { dialog, _ ->
                 lifecycleScope.launch {
                     viewModel.removeTrack(playlistId, track)
+                    viewModel.loadPlaylist(playlistId)
                 }
-                viewModel.loadPlaylist(playlistId)
                 dialog.dismiss()
             }.show()
+    }
+
+    private fun onShareClick() {
+        if (trackList.isEmpty()) {
+            showCustomToast(binding.root.context, getString(R.string.empty_tracklist_message))
+            return
+        }
+        val currentState = viewModel.screenState.value ?: return
+        val trackListText = currentState.tracks.mapIndexed { index, track ->
+            "${index + 1}. ${track.artistName} - ${track.trackName} (${track.trackDuration})"
+        }.joinToString("\n")
+
+        val trackCount = currentState.trackCount ?: 0
+        val tracksCountText = resources.getQuantityString(
+            R.plurals.track_count, trackCount, trackCount
+        )
+
+        val shareText = buildString {
+            appendLine(currentState.playlistName ?: "")
+            appendLine(currentState.description ?: "")
+            appendLine(tracksCountText)
+            appendLine()
+            append(trackListText)
+        }
+
+        viewModel.sharePlaylist(shareText)
+    }
+
+    private fun toggleOptionsBottomSheet() {
+        if (binding.trackList.isVisible) {
+            binding.trackList.isVisible = false
+            binding.optionsBottomsheet.isVisible = true
+        } else {
+            binding.trackList.isVisible = true
+            binding.optionsBottomsheet.isVisible = false
+        }
+    }
+
+    private fun onRemovePlaylistClick(playlistId: Int) {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setMessage(getString((R.string.delete_playlist_dialogue)))
+            .setNegativeButton(getString(R.string.no_capitals)) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(getString(R.string.yes_capitals)) { dialog, _ ->
+                lifecycleScope.launch {
+                    viewModel.removePlaylist(playlistId)
+                    findNavController().navigateUp()
+                }
+            }.show()
+    }
+
+    private fun onEditPlaylistClick(playlistId: Int) {
+
     }
 
     override fun onDestroyView() {
