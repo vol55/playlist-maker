@@ -9,6 +9,7 @@ import com.example.playlistmaker.library.domain.api.PlaylistsRepository
 import com.example.playlistmaker.library.domain.impl.FavoriteTracksInteractorImpl
 import com.example.playlistmaker.library.domain.impl.PlaylistsInteractorImpl
 import com.example.playlistmaker.library.ui.AddPlaylistViewModel
+import com.example.playlistmaker.library.ui.EditPlaylistViewModel
 import com.example.playlistmaker.library.ui.FavoritesViewModel
 import com.example.playlistmaker.library.ui.PlaylistDetailsViewModel
 import com.example.playlistmaker.library.ui.PlaylistsViewModel
@@ -21,6 +22,7 @@ val libraryModule = module {
     viewModel { FavoritesViewModel(get()) }
     viewModel { AddPlaylistViewModel(get()) }
     viewModel { PlaylistDetailsViewModel(get()) }
+    viewModel { EditPlaylistViewModel(get()) }
 
     single<FavoriteTracksRepository> {
         FavoriteTracksRepositoryImpl(get())

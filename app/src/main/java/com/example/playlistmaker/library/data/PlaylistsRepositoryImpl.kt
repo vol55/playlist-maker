@@ -41,6 +41,10 @@ class PlaylistsRepositoryImpl(
         }
     }
 
+    override fun getPlaylist(playlistId: Int): Flow<Playlist> {
+        return playlistDao.getPlaylist(playlistId).map { it.toDomain() }
+    }
+
     override suspend fun addTrack(track: Track, playlistId: Int) {
         playlistTracksDao.insertTrack(track.toPlaylistTrackEntity(playlistId))
         val count = playlistTracksDao.getTrackCountForPlaylist(playlistId)

@@ -198,7 +198,12 @@ class PlaylistDetailsFragment : Fragment() {
             }.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun onEditPlaylistClick(playlistId: Int) {
+        val args = EditPlaylistFragment.createArgs(playlistId)
+        findNavController().navigate(
+            R.id.action_playlistDetailsFragment_to_editPlaylistFragment, args
+        )
 
     }
 

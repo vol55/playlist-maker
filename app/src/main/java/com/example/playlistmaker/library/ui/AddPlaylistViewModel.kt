@@ -12,32 +12,32 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackUi
 import java.io.File
 
-class AddPlaylistViewModel(
-    private val playlistsInteractor: PlaylistsInteractor
+open class AddPlaylistViewModel(
+    protected val playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
 
-    private val _screenState = MutableLiveData(AddPlaylistScreenState())
-    val screenState: LiveData<AddPlaylistScreenState> = _screenState
+    protected val mutableScreenState = MutableLiveData(AddPlaylistScreenState())
+    val screenState: LiveData<AddPlaylistScreenState> = mutableScreenState
 
     fun onNameChanged(name: String) {
-        _screenState.value = _screenState.value?.copy(name = name)
-        _screenState.value = _screenState.value?.copy(isNameValid = name.isNotBlank())
+        mutableScreenState.value = mutableScreenState.value?.copy(name = name)
+        mutableScreenState.value = mutableScreenState.value?.copy(isNameValid = name.isNotBlank())
     }
 
     fun onDescriptionChanged(description: String) {
-        _screenState.value = _screenState.value?.copy(description = description)
+        mutableScreenState.value = mutableScreenState.value?.copy(description = description)
     }
 
     fun onImageSelected(uri: Uri?) {
         if (uri == null) return
         val file = saveCover(uri)
 
-        _screenState.value = _screenState.value?.copy(imageUri = uri)
-        _screenState.value = _screenState.value?.copy(imageFile = file)
+        mutableScreenState.value = mutableScreenState.value?.copy(imageUri = uri)
+        mutableScreenState.value = mutableScreenState.value?.copy(imageFile = file)
     }
 
     fun hasUnsavedChanges(): Boolean {
-        return _screenState.value?.isNameValid == true || _screenState.value?.description?.isNotBlank() == true || _screenState.value?.imageUri != null
+        return mutableScreenState.value?.isNameValid == true || mutableScreenState.value?.description?.isNotBlank() == true || mutableScreenState.value?.imageUri != null
     }
 
     fun saveCover(uri: Uri): File? {
@@ -45,12 +45,12 @@ class AddPlaylistViewModel(
     }
 
     suspend fun createPlaylist(): Int {
-        val uri = _screenState.value?.imageUri
+        val uri = mutableScreenState.value?.imageUri
         val imageFile = uri?.let { saveCover(it) }
         val playlist = Playlist(
             id = 0,
-            title = _screenState.value?.name.orEmpty(),
-            description = _screenState.value?.description,
+            title = mutableScreenState.value?.name.orEmpty(),
+            description = mutableScreenState.value?.description,
             coverImagePath = imageFile?.absolutePath,
             trackCount = 0
         )
@@ -64,10 +64,11 @@ class AddPlaylistViewModel(
 
     fun notifyPlaylistCreated(context: Context, track: TrackUi?) {
         val message = if (track != null) {
-            context.getString(R.string.add_playlist_track_added, _screenState.value?.name)
+            context.getString(R.string.add_playlist_track_added, mutableScreenState.value?.name)
         } else {
-            context.getString(R.string.add_playlist_created, _screenState.value?.name)
+            context.getString(R.string.add_playlist_created, mutableScreenState.value?.name)
         }
-        _screenState.value = _screenState.value?.copy(toastMessage = message, navigateUp = true)
+        mutableScreenState.value =
+            mutableScreenState.value?.copy(toastMessage = message, navigateUp = true)
     }
 }
