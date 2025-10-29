@@ -55,7 +55,7 @@ class PlaylistDetailsFragment : Fragment() {
 
         val playlistBottomSheetBinding = binding.playlistBottomsheet
 
-        val playlistId = arguments?.getInt("playlistId") ?: return
+        val playlistId = arguments?.getInt(ARG_PLAYLIST_ID) ?: return
 
         onTrackClick = debounce(
             CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false
@@ -209,5 +209,6 @@ class PlaylistDetailsFragment : Fragment() {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 200L
+        private const val ARG_PLAYLIST_ID = "playlist_id"
     }
 }
