@@ -19,6 +19,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistDetailsBinding
 import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.toUi
 import com.example.playlistmaker.utils.debounce
 import com.example.playlistmaker.utils.showCustomToast
@@ -32,7 +33,7 @@ class PlaylistDetailsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val trackList = ArrayList<Track>()
-    private lateinit var trackAdapter: PlaylistDetailsTrackAdapter
+    private lateinit var trackAdapter: TrackAdapter
     private lateinit var onTrackClick: (Track) -> Unit
     private lateinit var onTrackLongClick: (Track) -> Unit
 
@@ -71,7 +72,7 @@ class PlaylistDetailsFragment : Fragment() {
             showDeleteConfirmationDialog(playlistId, track)
         }
 
-        trackAdapter = PlaylistDetailsTrackAdapter(
+        trackAdapter = TrackAdapter(
             trackList,
             onItemClick = { track -> onTrackClick(track) },
             onItemLongClick = { track -> onTrackLongClick(track) })

@@ -64,8 +64,8 @@ class SearchFragment : Fragment() {
             openPlayerFragment(track)
         }
 
-        trackAdapter = TrackAdapter(tracks) { track -> onTrackClickDebounce(track) }
-        trackHistoryAdapter = TrackAdapter(historyTracks) { track -> onTrackClickDebounce(track) }
+        trackAdapter = TrackAdapter(tracks, onTrackClickDebounce)
+        trackHistoryAdapter = TrackAdapter(historyTracks, onTrackClickDebounce)
 
         binding.rvTrackList.adapter = trackAdapter
         binding.llSearchHistory.rvTrackHistoryList.adapter = trackHistoryAdapter

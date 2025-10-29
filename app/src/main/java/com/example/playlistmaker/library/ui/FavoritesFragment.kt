@@ -47,7 +47,7 @@ class FavoritesFragment : Fragment() {
             binding.rvTrackList.isVisible = tracks.isNotEmpty()
             binding.llEmptyFavorites.isVisible = tracks.isEmpty()
 
-            val adapter = TrackAdapter(tracks) { track -> onTrackClick(track) }
+            val adapter = TrackAdapter(tracks, onTrackClick)
             binding.rvTrackList.adapter = adapter
         }
 
