@@ -8,6 +8,8 @@ import java.io.File
 
 interface PlaylistsInteractor {
     suspend fun addPlaylist(playlist: Playlist): Int
+
+    suspend fun updatePlaylist(playlist: Playlist)
     suspend fun removePlaylist(playlistId: Int)
     fun getPlaylists(): Flow<List<Playlist>>
     fun getPlaylist(playlistId: Int): Flow<Playlist>

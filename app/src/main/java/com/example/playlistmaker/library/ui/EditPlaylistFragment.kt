@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -31,6 +34,13 @@ class EditPlaylistFragment : AddPlaylistFragment() {
         binding.toolbarButtonBack.title = getString(R.string.edit_button)
         binding.toolbarButtonBack.setNavigationOnClickListener { findNavController().navigateUp() }
 
+        binding.buttonSave.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                editPlaylistViewModel.editPlaylist(playlistId)
+                editPlaylistViewModel.notifyPlaylistEdited(binding.root.context)
+            }
+        }
+
         editPlaylistViewModel.screenState.observe(viewLifecycleOwner) { state ->
             if (binding.playlistTitleInput.text.toString() != (state.name ?: "")) {
                 binding.playlistTitleInput.setText(state.name ?: "")
@@ -39,8 +49,8 @@ class EditPlaylistFragment : AddPlaylistFragment() {
                 binding.playlistDescriptionInput.setText(state.description ?: "")
             }
 
-            state.imageFile?.let {
-                binding.playlistImage.setImageURI(android.net.Uri.fromFile(it))
+            state.imageFile?.let { file ->
+                Glide.with(requireContext()).load(file).centerCrop().into(binding.playlistImage)
             }
         }
     }

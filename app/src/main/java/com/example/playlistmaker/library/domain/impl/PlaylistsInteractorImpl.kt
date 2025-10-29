@@ -1,5 +1,6 @@
 package com.example.playlistmaker.library.domain.impl
 
+import com.example.playlistmaker.library.data.db.mappers.toEntity
 import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.library.domain.api.PlaylistsRepository
 import com.example.playlistmaker.library.domain.models.Playlist
@@ -15,6 +16,10 @@ class PlaylistsInteractorImpl(
 
     override suspend fun addPlaylist(playlist: Playlist): Int {
         return repository.addPlaylist(playlist)
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        repository.updatePlaylist(playlist.toEntity())
     }
 
     override suspend fun removePlaylist(playlistId: Int) {

@@ -59,6 +59,7 @@
     <string name="delete_playlist_dialogue">Хотите удалить плейлист?</string>
     <string name="save">Сохранить</string>
     <string name="edit_button">Редактировать</string>
+    <string name="data_saved">Данные сохранены</string>
     <plurals name="track_count">
         <item quantity="one">%d трек</item>
         <item quantity="few">%d трека</item>

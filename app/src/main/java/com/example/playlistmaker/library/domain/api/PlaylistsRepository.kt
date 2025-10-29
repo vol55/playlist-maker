@@ -1,5 +1,6 @@
 package com.example.playlistmaker.library.domain.api
 
+import com.example.playlistmaker.library.data.db.PlaylistEntity
 import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.library.domain.models.PlaylistWithTracks
 import com.example.playlistmaker.search.domain.models.Track
@@ -8,6 +9,7 @@ import java.io.File
 
 interface PlaylistsRepository {
     suspend fun addPlaylist(playlist: Playlist): Int
+    suspend fun updatePlaylist(playlist: PlaylistEntity)
     suspend fun removePlaylist(playlistId: Int)
     fun getPlaylists(): Flow<List<Playlist>>
     fun getPlaylist(playlistId: Int): Flow<Playlist>

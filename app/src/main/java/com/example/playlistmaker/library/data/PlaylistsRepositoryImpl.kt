@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import com.example.playlistmaker.library.data.db.PlaylistDao
+import com.example.playlistmaker.library.data.db.PlaylistEntity
 import com.example.playlistmaker.library.data.db.PlaylistTracksDao
 import com.example.playlistmaker.library.data.db.mappers.toDomain
 import com.example.playlistmaker.library.data.db.mappers.toEntity
@@ -29,6 +30,10 @@ class PlaylistsRepositoryImpl(
     override suspend fun addPlaylist(playlist: Playlist): Int {
         val id = playlistDao.insertPlaylist(playlist.toEntity())
         return id.toInt()
+    }
+
+    override suspend fun updatePlaylist(playlist: PlaylistEntity) {
+        playlistDao.updatePlaylist(playlist)
     }
 
     override suspend fun removePlaylist(playlistId: Int) {
