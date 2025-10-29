@@ -1,6 +1,5 @@
 package com.example.playlistmaker.library.ui
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -112,15 +111,10 @@ class PlaylistDetailsFragment : Fragment() {
             trackList.clear()
             trackList.addAll(screenState.tracks)
             trackAdapter.notifyDataSetChanged()
+        }
 
-            screenState.shareText?.let { text ->
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, text)
-                }
-                startActivity(Intent.createChooser(intent, null))
-                viewModel.clearShareText()
-            }
+        viewModel.observeShareIntent().observe(viewLifecycleOwner) { intent ->
+            startActivity(intent)
         }
 
         binding.toolbarButtonBack.setNavigationOnClickListener {

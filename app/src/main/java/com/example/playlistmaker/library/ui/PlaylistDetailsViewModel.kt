@@ -7,29 +7,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 
-
 class PlaylistDetailsViewModel(
     private val playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
+
     data class ScreenState(
         val playlistName: String? = null,
         val imageFile: File? = null,
         val description: String? = null,
         val minutes: Int? = null,
         val trackCount: Int? = null,
-        val tracks: List<Track> = emptyList(),
-        val shareText: String? = null
+        val tracks: List<Track> = emptyList()
     )
 
-    private val _screenState = MutableLiveData<ScreenState>(
-        ScreenState()
-    )
+    private val _screenState = MutableLiveData(ScreenState())
     val screenState: LiveData<ScreenState> get() = _screenState
 
+    private val shareIntentEvent = SingleLiveEvent<Intent>()
+    fun observeShareIntent(): LiveData<Intent> = shareIntentEvent
 
     fun loadPlaylist(playlistId: Int) {
         viewModelScope.launch {
@@ -43,7 +43,9 @@ class PlaylistDetailsViewModel(
                 description = playlistWithTracks.playlist.description,
                 minutes = tracks.sumOf { it.trackTimeMillis } / 1000 / 60,
                 trackCount = tracks.size,
-                tracks = tracks))
+                tracks = tracks
+                )
+            )
         }
     }
 
@@ -60,11 +62,6 @@ class PlaylistDetailsViewModel(
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, shareText)
         }
-        _screenState.postValue(_screenState.value?.copy(shareText = shareText))
+        shareIntentEvent.postValue(Intent.createChooser(intent, null))
     }
-
-    fun clearShareText() {
-        _screenState.value = _screenState.value?.copy(shareText = null)
-    }
-
 }
