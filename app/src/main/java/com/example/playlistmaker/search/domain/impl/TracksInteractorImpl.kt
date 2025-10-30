@@ -21,18 +21,19 @@ class TracksInteractorImpl(
                 } else {
                     val tracks = response.results.map { dto: TrackDto ->
                         Track(
-                            dto.trackId,
-                            dto.trackName,
-                            dto.artistName,
-                            dto.trackTimeMillis,
-                            dto.getDuration(),
-                            dto.artworkUrl100,
-                            dto.getCoverArtwork(),
-                            dto.collectionName,
-                            dto.getReleaseYear(),
-                            dto.primaryGenreName,
-                            dto.country,
-                            dto.previewUrl,
+                            trackId = dto.trackId ?: 0,
+                            trackName = dto.trackName.orEmpty(),
+                            artistName = dto.artistName.orEmpty(),
+                            trackTimeMillis = dto.trackTimeMillis ?: 0,
+                            trackDuration = dto.getDuration(),
+                            artworkUrl100 = dto.artworkUrl100.orEmpty(),
+                            coverArtworkUrl = dto.getCoverArtwork(),
+                            collectionName = dto.collectionName.orEmpty(),
+                            trackReleaseYear = dto.getReleaseYear(),
+                            primaryGenreName = dto.primaryGenreName.orEmpty(),
+                            country = dto.country.orEmpty(),
+                            previewUrl = dto.previewUrl.orEmpty(),
+                            isFavorite = false
                         )
                     }
                     Result.success(tracks)
