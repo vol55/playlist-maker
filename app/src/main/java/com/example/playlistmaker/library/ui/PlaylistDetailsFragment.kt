@@ -196,12 +196,19 @@ class PlaylistDetailsFragment : Fragment() {
     }
 
     private fun toggleOptionsBottomSheet() {
-        if (binding.trackList.isVisible) {
-            binding.trackList.isVisible = false
-            binding.optionsBottomsheet.isVisible = true
-        } else {
-            binding.trackList.isVisible = true
+        val bottomSheet = binding.tracksBottomSheet
+        val behavior = BottomSheetBehavior.from(bottomSheet)
+
+        if (binding.optionsBottomsheet.isVisible) {
             binding.optionsBottomsheet.isVisible = false
+            binding.trackList.isVisible = trackList.isNotEmpty()
+            binding.noTracksMessage.isVisible = trackList.isEmpty()
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        } else {
+            binding.optionsBottomsheet.isVisible = true
+            binding.trackList.isVisible = false
+            binding.noTracksMessage.isVisible = false
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
