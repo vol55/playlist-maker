@@ -23,4 +23,6 @@
 
     <attr name="retryButtonBackground" format="color" />
 
+    <attr name="light_gray_to_white" format="color" />
+
 </resources>

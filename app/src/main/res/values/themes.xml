@@ -29,5 +29,7 @@
 
         <item name="retryButtonBackground">@color/yandex_black</item>
 
+        <item name="light_gray_to_white">@color/yandex_light_gray</item>
+
     </style>
 </resources>

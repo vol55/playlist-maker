@@ -115,11 +115,18 @@
         app:behavior_hideable="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bottom_sheet_handle" />
+
         <LinearLayout
             android:id="@+id/optionsBottomsheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_24dp"
+            android:layout_marginTop="@dimen/space_12dp"
             android:orientation="vertical"
             android:visibility="gone">
 
