@@ -20,7 +20,7 @@ open class AddPlaylistViewModel(
     val screenState: LiveData<AddPlaylistScreenState> = mutableScreenState
 
     fun onNameChanged(name: String) {
-        mutableScreenState.value = mutableScreenState.value?.copy(name = name)
+        mutableScreenState.value = mutableScreenState.value?.copy(name = name.trim())
         mutableScreenState.value = mutableScreenState.value?.copy(isNameValid = name.isNotBlank())
     }
 

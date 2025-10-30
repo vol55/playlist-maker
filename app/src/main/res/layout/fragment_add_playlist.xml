@@ -72,7 +72,8 @@
             android:id="@+id/playlistTitleInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/label_title" />
+            android:hint="@string/label_title"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -94,8 +95,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/description"
             android:inputType="textMultiLine"
-            android:lines="1"
-            android:maxLines="2"
+            android:maxLines="1"
             android:scrollHorizontally="false" />
     </com.google.android.material.textfield.TextInputLayout>
 

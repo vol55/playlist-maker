@@ -23,6 +23,7 @@ import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.search.ui.toUi
 import com.example.playlistmaker.utils.debounce
 import com.example.playlistmaker.utils.showCustomToast
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,6 +53,21 @@ class PlaylistDetailsFragment : Fragment() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
+        }
+
+        val bottomSheet = binding.tracksBottomSheet
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
+        binding.buttonShare.post {
+            val location = IntArray(2)
+            binding.buttonShare.getLocationOnScreen(location)
+            val buttonBottom = location[1] + (binding.buttonShare.height * 2)
+
+            val screenHeight = resources.displayMetrics.heightPixels
+            val desiredPeekHeight = screenHeight - buttonBottom
+
+            bottomSheetBehavior.peekHeight = desiredPeekHeight
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         val playlistBottomSheetBinding = binding.playlistBottomsheet
@@ -112,6 +128,9 @@ class PlaylistDetailsFragment : Fragment() {
             trackList.clear()
             trackList.addAll(screenState.tracks)
             trackAdapter.notifyDataSetChanged()
+
+            binding.noTracksMessage.isVisible = trackList.isEmpty()
+            binding.trackList.isVisible = trackList.isNotEmpty()
         }
 
         viewModel.observeShareIntent().observe(viewLifecycleOwner) { intent ->
