@@ -32,7 +32,11 @@ class PlayerFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val track: TrackUi? by lazy {
-        requireArguments().getParcelable(ARG_TRACK, TrackUi::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(ARG_TRACK, TrackUi::class.java)
+        } else {
+            @Suppress("DEPRECATION") requireArguments().getParcelable(ARG_TRACK) as? TrackUi
+        }
     }
 
     private val playerViewModel: PlayerViewModel by viewModel {

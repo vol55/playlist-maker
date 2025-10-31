@@ -157,7 +157,8 @@ class SearchFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_FIELD_VALUE, binding.inputField.text.toString())
+        val query = _binding?.inputField?.text?.toString() ?: ""
+        outState.putString(SEARCH_FIELD_VALUE, query)
     }
 
     override fun onResume() {
