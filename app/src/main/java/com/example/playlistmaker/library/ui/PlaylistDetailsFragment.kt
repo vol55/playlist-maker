@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -54,20 +55,21 @@ class PlaylistDetailsFragment : Fragment() {
             insets
         }
 
-        val bottomSheet = binding.tracksBottomSheet
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-
-        binding.buttonShare.post {
-            val location = IntArray(2)
-            binding.buttonShare.getLocationOnScreen(location)
-            val buttonBottom = location[1] + (binding.buttonShare.height * 2)
-
-            val screenHeight = resources.displayMetrics.heightPixels
-            val desiredPeekHeight = screenHeight - buttonBottom
-
-            bottomSheetBehavior.peekHeight = desiredPeekHeight
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+//        val bottomSheet = binding.tracksBottomSheet
+//        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+//
+//        binding.buttonShare.post {
+//            val location = IntArray(2)
+//            binding.buttonShare.getLocationOnScreen(location)
+//            val buttonBottom = location[1] + (binding.buttonShare.height * 2)
+//
+//            val screenHeight = resources.displayMetrics.heightPixels
+//            val desiredPeekHeight = screenHeight - buttonBottom
+//
+//            bottomSheetBehavior.peekHeight = desiredPeekHeight
+//            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//        }
+        setTracksBottomSheet()
 
         val playlistBottomSheetBinding = binding.playlistBottomsheet
 
@@ -143,7 +145,8 @@ class PlaylistDetailsFragment : Fragment() {
         binding.buttonShare.setOnClickListener { onShareClick() }
 
         binding.buttonOptions.setOnClickListener {
-            toggleOptionsBottomSheet()
+//            toggleOptionsBottomSheet()
+            setOptionsBottomSheet()
         }
 
         binding.shareTextView.setOnClickListener { onShareClick() }
@@ -190,21 +193,50 @@ class PlaylistDetailsFragment : Fragment() {
         viewModel.sharePlaylist(shareText)
     }
 
-    private fun toggleOptionsBottomSheet() {
-        val bottomSheet = binding.tracksBottomSheet
-        val behavior = BottomSheetBehavior.from(bottomSheet)
+    private fun setTracksBottomSheet() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
 
-        if (binding.optionsBottomsheet.isVisible) {
-            binding.optionsBottomsheet.isVisible = false
-            binding.trackList.isVisible = trackList.isNotEmpty()
-            binding.noTracksMessage.isVisible = trackList.isEmpty()
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        } else {
-            binding.optionsBottomsheet.isVisible = true
-            binding.trackList.isVisible = false
-            binding.noTracksMessage.isVisible = false
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        binding.buttonShare.post {
+            val location = IntArray(2)
+            binding.buttonShare.getLocationOnScreen(location)
+            val buttonBottom = location[1] + (binding.buttonShare.height * 2)
+
+            val screenHeight = resources.displayMetrics.heightPixels
+            val desiredPeekHeight = screenHeight - buttonBottom
+
+            binding.buttonShare.doOnLayout {
+                bottomSheetBehavior.peekHeight = desiredPeekHeight
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
         }
+
+        binding.optionsBottomsheet.isVisible = false
+        binding.trackList.isVisible = trackList.isNotEmpty()
+        binding.noTracksMessage.isVisible = trackList.isEmpty()
+    }
+
+    private fun setOptionsBottomSheet() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
+
+        binding.buttonShare.doOnLayout {
+            bottomSheetBehavior.peekHeight = 0
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    setTracksBottomSheet()
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+
+        binding.trackList.isVisible = false
+        binding.noTracksMessage.isVisible = false
+        binding.optionsBottomsheet.isVisible = true
     }
 
     private fun onRemovePlaylistClick(playlistId: Int) {
