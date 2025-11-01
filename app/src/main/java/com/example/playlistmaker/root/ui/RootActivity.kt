@@ -29,7 +29,7 @@ class RootActivity : AppCompatActivity() {
             R.id.playerFragment,
             R.id.addPlaylistFragment,
             R.id.playlistDetailsFragment,
-            R.id.editPlaylistFragment
+            R.id.editPlaylistFragment,
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -37,8 +37,13 @@ class RootActivity : AppCompatActivity() {
             binding.bottomNavigationBorder.isVisible = destination.id !in hiddenBotNavScreens
         }
 
+        val customBackHandledScreens = setOf(
+            R.id.playerFragment,
+            R.id.playlistDetailsFragment,
+        )
+
         onBackPressedDispatcher.addCallback(this) {
-            if (navController.currentDestination?.id == R.id.playerFragment) {
+            if (navController.currentDestination?.id in customBackHandledScreens) {
                 if (!navController.popBackStack()) finish()
             } else {
                 moveTaskToBack(true)
