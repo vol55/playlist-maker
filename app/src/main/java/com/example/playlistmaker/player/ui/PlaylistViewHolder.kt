@@ -19,7 +19,11 @@ class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(playlist: Playlist) {
         title.text = playlist.title
-        count.text = "${playlist.trackCount.toString()} треков"
+        val resources = itemView.resources
+        val trackCountText = resources.getQuantityString(
+            R.plurals.track_count, playlist.trackCount, playlist.trackCount
+        )
+        count.text = trackCountText
 
         playlist.coverImagePath?.let { coverPath ->
             Glide.with(itemView.context).load(coverPath).apply(

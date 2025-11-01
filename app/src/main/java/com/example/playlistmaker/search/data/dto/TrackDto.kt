@@ -4,21 +4,23 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class TrackDto(
-    val trackId: Int,
-    val trackName: String,
-    val artistName: String,
-    val trackTimeMillis: Int,
-    val artworkUrl100: String,
-    val coverArtworkUrl: String,
-    val collectionName: String,
-    val releaseDate: String,
-    val primaryGenreName: String,
-    val country: String,
-    val previewUrl: String,
+    val trackId: Int? = null,
+    val trackName: String? = null,
+    val artistName: String? = null,
+    val trackTimeMillis: Int? = null,
+    val artworkUrl100: String? = null,
+    val coverArtworkUrl: String? = null,
+    val collectionName: String? = null,
+    val releaseDate: String? = null,
+    val primaryGenreName: String? = null,
+    val country: String? = null,
+    val previewUrl: String? = null,
 ) {
     fun getDuration(): String =
-        SimpleDateFormat("mm:ss", Locale.getDefault()).format(this.trackTimeMillis)
+        trackTimeMillis?.let { SimpleDateFormat("mm:ss", Locale.getDefault()).format(it) }
+            ?: "00:00"
 
-    fun getCoverArtwork(): String = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
-    fun getReleaseYear(): String = this.releaseDate.take(4)
+    fun getCoverArtwork(): String = artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg") ?: ""
+
+    fun getReleaseYear(): String = releaseDate?.take(4) ?: ""
 }

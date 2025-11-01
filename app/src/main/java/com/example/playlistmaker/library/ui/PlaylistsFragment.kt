@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -29,7 +30,11 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playlistsAdapter = PlaylistsAdapter(mutableListOf())
+        playlistsAdapter = PlaylistsAdapter(mutableListOf()) { playlist ->
+            findNavController().navigate(
+                R.id.action_libraryFragment_to_playlistDetailsFragment, createArgs(playlist.id)
+            )
+        }
         binding.playlistsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.playlistsRecyclerView.adapter = playlistsAdapter
 
@@ -65,5 +70,8 @@ class PlaylistsFragment : Fragment() {
 
     companion object {
         fun newInstance() = PlaylistsFragment()
+
+        private const val ARG_PLAYLIST_ID = "playlist_id"
+        fun createArgs(playlistId: Int): Bundle = bundleOf(ARG_PLAYLIST_ID to playlistId)
     }
 }

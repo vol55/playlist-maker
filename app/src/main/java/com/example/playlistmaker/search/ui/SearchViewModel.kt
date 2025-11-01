@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.utils.debounce
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -15,71 +16,78 @@ class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
-    private val stateLiveData = MutableLiveData<SearchState>(SearchState.History(emptyList()))
-    fun observeState(): LiveData<SearchState> = stateLiveData
+    private val _screenState =
+        MutableLiveData<SearchScreenState>(SearchScreenState.History(emptyList()))
 
-    private var latestSearchText = ""
+    val screenState: LiveData<SearchScreenState> get() = _screenState
 
-    private val trackSearchDebounce = debounce<String>(
-        SEARCH_DEBOUNCE_DELAY, viewModelScope, true
-    ) { query ->
-        if (latestSearchText != query) {
+    private var searchJob: Job? = null
+    private var lastQuery: String = ""
+
+    fun onSearchQueryChanged(query: String) {
+        searchJob?.cancel()
+        if (query.isBlank() || query == lastQuery) return
+
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
             performSearch(query)
         }
     }
 
-    fun setSearchFieldValue(value: String) {
-        latestSearchText = value
-    }
-
-    fun searchDebounce(query: String) {
-        trackSearchDebounce(query)
-    }
-
-    fun onSearchQueryChanged(query: String) {
-        if (query.isEmpty()) {
-            updateHistory()
-        }
-        searchDebounce(query)
-    }
-
     fun performSearch(query: String) {
-        latestSearchText = query
-        stateLiveData.postValue(SearchState.Loading)
+        searchJob?.cancel()
+        if (query.isEmpty()) {
+            setScreenStateToHistory()
+            return
+        }
+        _screenState.postValue(SearchScreenState.Loading)
 
         viewModelScope.launch {
+            lastQuery = query
             tracksInteractor.searchTracks(query).collect { result ->
                 if (result.isSuccess) {
                     val tracks = result.getOrThrow()
                     if (tracks.isEmpty()) {
-                        stateLiveData.postValue(SearchState.NoResults)
+                        _screenState.postValue(SearchScreenState.NoResults)
                     } else {
-                        stateLiveData.postValue(SearchState.Results(tracks))
+                        _screenState.postValue(SearchScreenState.Results(tracks))
                     }
                 } else {
-                    stateLiveData.postValue(SearchState.NotConnected)
+                    _screenState.postValue(SearchScreenState.NotConnected)
                 }
             }
         }
     }
 
-    fun updateHistory() {
+    fun setScreenStateToHistory() {
         searchHistoryInteractor.getHistory(object : SearchHistoryInteractor.HistoryConsumer {
             override fun consume(searchHistory: List<Track>?) {
                 val tracks = searchHistory ?: emptyList()
-                stateLiveData.postValue(SearchState.History(tracks))
+                _screenState.postValue(SearchScreenState.History(tracks))
             }
         })
     }
 
+    fun setScreenState(query: String) {
+        when (_screenState.value) {
+            is SearchScreenState.Results -> {}
+            is SearchScreenState.NoResults -> {}
+            else -> {
+                if (query.isNotEmpty()) {
+                    performSearch(query)
+                } else {
+                    setScreenStateToHistory()
+                }
+            }
+        }
+    }
+
     fun saveTrackToHistory(track: Track) {
         searchHistoryInteractor.saveToHistory(track)
-        updateHistory()
     }
 
     fun clearHistory() {
         searchHistoryInteractor.clearHistory()
-        updateHistory()
     }
 
     companion object {

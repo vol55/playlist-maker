@@ -6,13 +6,14 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import com.example.playlistmaker.library.data.db.PlaylistDao
+import com.example.playlistmaker.library.data.db.PlaylistEntity
 import com.example.playlistmaker.library.data.db.PlaylistTracksDao
-import com.example.playlistmaker.library.data.db.PlaylistWithTracks
 import com.example.playlistmaker.library.data.db.mappers.toDomain
 import com.example.playlistmaker.library.data.db.mappers.toEntity
 import com.example.playlistmaker.library.data.db.mappers.toPlaylistTrackEntity
 import com.example.playlistmaker.library.domain.api.PlaylistsRepository
 import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.library.domain.models.PlaylistWithTracks
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -31,14 +32,32 @@ class PlaylistsRepositoryImpl(
         return id.toInt()
     }
 
+    override suspend fun updatePlaylist(playlist: PlaylistEntity) {
+        playlistDao.updatePlaylist(playlist)
+    }
+
+    override suspend fun removePlaylist(playlistId: Int) {
+        playlistDao.deletePlaylist(playlistId)
+    }
+
     override fun getPlaylists(): Flow<List<Playlist>> {
         return playlistDao.getPlaylists().map { entities ->
             entities.map { it.toDomain() }
         }
     }
 
+    override fun getPlaylist(playlistId: Int): Flow<Playlist> {
+        return playlistDao.getPlaylist(playlistId).map { it.toDomain() }
+    }
+
     override suspend fun addTrack(track: Track, playlistId: Int) {
         playlistTracksDao.insertTrack(track.toPlaylistTrackEntity(playlistId))
+        val count = playlistTracksDao.getTrackCountForPlaylist(playlistId)
+        playlistDao.updateTrackCount(playlistId, count)
+    }
+
+    override suspend fun removeTrack(trackId: Int, playlistId: Int) {
+        playlistTracksDao.deleteTrack(playlistId, trackId)
         val count = playlistTracksDao.getTrackCountForPlaylist(playlistId)
         playlistDao.updateTrackCount(playlistId, count)
     }
@@ -62,7 +81,9 @@ class PlaylistsRepositoryImpl(
         return file
     }
 
-    override fun getPlaylistsWithTracks(): Flow<List<PlaylistWithTracks>> {
-        return playlistDao.getPlaylistsWithTracks()
+    override fun getPlaylistWithTracks(playlistId: Int): Flow<PlaylistWithTracks> {
+        return playlistDao.getPlaylistWithTracks(playlistId).map { it.toDomain() }
     }
+
+
 }

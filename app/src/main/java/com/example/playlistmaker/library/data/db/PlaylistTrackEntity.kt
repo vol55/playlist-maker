@@ -20,6 +20,7 @@ data class PlaylistTrackEntity(
     val trackName: String,
     val artistName: String,
     val trackDuration: String,
+    val trackTimeMillis: Int,
     val artworkUrl100: String,
     val coverArtworkUrl: String,
     val collectionName: String,

@@ -9,6 +9,24 @@ fun Track.toPlaylistTrackEntity(playlistId: Int): PlaylistTrackEntity {
         trackId = trackId,
         trackName = trackName,
         artistName = artistName,
+        trackTimeMillis = trackTimeMillis,
+        trackDuration = trackDuration,
+        artworkUrl100 = artworkUrl100,
+        coverArtworkUrl = coverArtworkUrl,
+        collectionName = collectionName,
+        trackReleaseYear = trackReleaseYear,
+        primaryGenreName = primaryGenreName,
+        country = country,
+        previewUrl = previewUrl
+    )
+}
+
+fun PlaylistTrackEntity.toDomain(): Track {
+    return Track(
+        trackId = trackId,
+        trackName = trackName,
+        artistName = artistName,
+        trackTimeMillis = trackTimeMillis,
         trackDuration = trackDuration,
         artworkUrl100 = artworkUrl100,
         coverArtworkUrl = coverArtworkUrl,

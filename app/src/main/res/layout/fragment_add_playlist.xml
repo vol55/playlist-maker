@@ -46,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:background="?attr/backgroundPrimary"
                 android:contentDescription="@string/add_photo"
                 android:scaleType="center"
                 android:src="@drawable/add_photo" />
@@ -71,7 +72,10 @@
             android:id="@+id/playlistTitleInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/label_title" />
+            android:hint="@string/label_title"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -92,10 +96,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/description"
-            android:inputType="textMultiLine"
-            android:lines="1"
-            android:maxLines="2"
-            android:scrollHorizontally="false" />
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

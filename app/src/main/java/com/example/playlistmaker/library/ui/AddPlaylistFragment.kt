@@ -28,12 +28,12 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-class AddPlaylistFragment : Fragment() {
+open class AddPlaylistFragment : Fragment() {
 
-    private val addPlaylistViewModel: AddPlaylistViewModel by viewModel()
+    protected open val addPlaylistViewModel: AddPlaylistViewModel by viewModel()
 
     private var _binding: FragmentAddPlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
     private val track: TrackUi? by lazy {
         arguments?.getParcelable(ARG_TRACK, TrackUi::class.java)
@@ -66,7 +66,6 @@ class AddPlaylistFragment : Fragment() {
         }
 
         binding.toolbarButtonBack.setNavigationOnClickListener { handleBackPressed() }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { handleBackPressed() }
 
         addPlaylistViewModel.screenState.observe(viewLifecycleOwner) { state ->
             binding.buttonSave.isEnabled = state.isNameValid
@@ -104,7 +103,7 @@ class AddPlaylistFragment : Fragment() {
         }
     }
 
-    private fun handleBackPressed() {
+    open fun handleBackPressed() {
         if (addPlaylistViewModel.hasUnsavedChanges()) {
             showExitConfirmationDialog()
         } else {
@@ -121,6 +120,11 @@ class AddPlaylistFragment : Fragment() {
                 dialog.dismiss()
                 findNavController().navigateUp()
             }.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { handleBackPressed() }
     }
 
     override fun onDestroyView() {

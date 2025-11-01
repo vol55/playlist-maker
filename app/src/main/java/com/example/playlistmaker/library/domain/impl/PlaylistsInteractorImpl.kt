@@ -1,9 +1,10 @@
 package com.example.playlistmaker.library.domain.impl
 
-import com.example.playlistmaker.library.data.db.PlaylistWithTracks
+import com.example.playlistmaker.library.data.db.mappers.toEntity
 import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
 import com.example.playlistmaker.library.domain.api.PlaylistsRepository
 import com.example.playlistmaker.library.domain.models.Playlist
+import com.example.playlistmaker.library.domain.models.PlaylistWithTracks
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -17,12 +18,28 @@ class PlaylistsInteractorImpl(
         return repository.addPlaylist(playlist)
     }
 
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        repository.updatePlaylist(playlist.toEntity())
+    }
+
+    override suspend fun removePlaylist(playlistId: Int) {
+        repository.removePlaylist(playlistId)
+    }
+
     override fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylists()
     }
 
+    override fun getPlaylist(playlistId: Int): Flow<Playlist> {
+        return repository.getPlaylist(playlistId)
+    }
+
     override suspend fun addTrack(track: Track, playlistId: Int) {
         repository.addTrack(track, playlistId)
+    }
+
+    override suspend fun removeTrack(playlistId: Int, trackId: Int) {
+        repository.removeTrack(trackId, playlistId)
     }
 
     override suspend fun isTrackInPlaylist(playlistId: Int, trackId: Int): Boolean {
@@ -33,7 +50,7 @@ class PlaylistsInteractorImpl(
         return repository.saveCover(uri)
     }
 
-    override fun getPlaylistsWithTracks(): Flow<List<PlaylistWithTracks>> {
-        return repository.getPlaylistsWithTracks()
+    override fun getPlaylistWithTracks(playlistId: Int): Flow<PlaylistWithTracks> {
+        return repository.getPlaylistWithTracks(playlistId)
     }
 }
