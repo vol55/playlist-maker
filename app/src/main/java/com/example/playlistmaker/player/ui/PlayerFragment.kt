@@ -13,7 +13,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
@@ -67,13 +66,28 @@ class PlayerFragment : Fragment() {
             return
         }
 
-        initTrackInfo()
-        initPlayerObservers()
-        initButtons()
-        initBottomSheet()
-    }
+        binding.tvTrackTitle.text = track?.trackName
+        binding.tvArtistName.text = track?.artistName
+        binding.tvTrackDuration.text = track?.trackDuration
+        binding.tvCollectionName.text = track?.collectionName
+        binding.tvReleaseDate.text = track?.trackReleaseYear
+        binding.tvPrimaryGenreName.text = track?.primaryGenreName
+        binding.tvCountry.text = track?.country
 
-    private fun initPlayerObservers() {
+        Glide.with(requireContext()).load(track?.coverArtworkUrl).apply(
+            RequestOptions().placeholder(R.drawable.placeholder)
+        ).into(binding.ivCoverArtwork)
+
+        initBottomSheet()
+
+        binding.ibPlayButton.setOnClickListener { playerViewModel.onPlayButtonClicked() }
+        binding.likeButton.setOnClickListener { playerViewModel.onFavoriteClicked() }
+        binding.toolbarButtonBack.setNavigationOnClickListener { findNavController().navigateUp() }
+
+        binding.leftButton.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
+
         playerViewModel.screenState.observe(viewLifecycleOwner) { state ->
             when (state.playerState) {
                 PlayerViewModel.PlayerState.DEFAULT -> {
@@ -96,68 +110,47 @@ class PlayerFragment : Fragment() {
                     setPlayIcon()
                 }
             }
+
             binding.tvCurrentTime.text = state.progressTime
             setLikeIcon(state.isFavorite)
+
             playlistsAdapter.updatePlaylists(state.playlists)
 
         }
     }
 
-    private fun initButtons() {
-        binding.ibPlayButton.setOnClickListener { playerViewModel.onPlayButtonClicked() }
-        binding.likeButton.setOnClickListener { playerViewModel.onFavoriteClicked() }
-        binding.toolbarButtonBack.setNavigationOnClickListener { findNavController().navigateUp() }
-
-        binding.leftButton.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-    }
-
     private fun initBottomSheet() {
-        val bottomSheetContainer =
-            binding.root.findViewById<LinearLayout>(R.id.playlists_bottom_sheet)
-        val overlay = binding.root.findViewById<View>(R.id.overlay)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        val displayMetrics = resources.displayMetrics
-        val bottomSheetHeight = (displayMetrics.heightPixels * 0.6).toInt()
-
-        bottomSheetContainer.layoutParams.height = bottomSheetHeight
-        bottomSheetContainer.requestLayout()
-
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-            isHideable = true
-            peekHeight = bottomSheetHeight
-        }
-
-        val playlistsRecyclerView = bottomSheetContainer.findViewById<RecyclerView>(R.id.playlists)
         playlistsAdapter = PlaylistsAdapter { playlist ->
             track?.let { currentTrack ->
                 playerViewModel.addTrackToPlaylist(playlist.id) { added ->
-                    val message = if (added) {
-                        getString(R.string.player_track_added, playlist.title)
+                    val message: String
+                    if (added) {
+                        message = getString(R.string.player_track_added, playlist.title)
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     } else {
-                        getString(R.string.player_track_exists, playlist.title)
+                        message = getString(R.string.player_track_exists, playlist.title)
                     }
                     showCustomToast(requireContext(), message)
                 }
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
 
-        playlistsRecyclerView.adapter = playlistsAdapter
+        binding.playlists.adapter = playlistsAdapter
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                overlay.visibility =
+                binding.overlay.visibility =
                     if (newState == BottomSheetBehavior.STATE_HIDDEN) View.GONE else View.VISIBLE
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
-        overlay.setOnClickListener {
+        binding.overlay.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -169,20 +162,6 @@ class PlayerFragment : Fragment() {
                 )
             }
         }
-    }
-
-    private fun initTrackInfo() {
-        binding.tvTrackTitle.text = track?.trackName
-        binding.tvArtistName.text = track?.artistName
-        binding.tvTrackDuration.text = track?.trackDuration
-        binding.tvCollectionName.text = track?.collectionName
-        binding.tvReleaseDate.text = track?.trackReleaseYear
-        binding.tvPrimaryGenreName.text = track?.primaryGenreName
-        binding.tvCountry.text = track?.country
-
-        Glide.with(requireContext()).load(track?.coverArtworkUrl).apply(
-            RequestOptions().placeholder(R.drawable.placeholder)
-        ).into(binding.ivCoverArtwork)
     }
 
     private fun setPlayIcon() {
