@@ -55,6 +55,10 @@ class EditPlaylistFragment : AddPlaylistFragment() {
         }
     }
 
+    override fun handleBackPressed() {
+        findNavController().navigateUp()
+    }
+
     companion object {
         private const val ARG_PLAYLIST_ID = "playlist_id"
 

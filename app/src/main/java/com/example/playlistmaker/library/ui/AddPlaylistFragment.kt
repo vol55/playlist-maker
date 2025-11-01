@@ -66,7 +66,6 @@ open class AddPlaylistFragment : Fragment() {
         }
 
         binding.toolbarButtonBack.setNavigationOnClickListener { handleBackPressed() }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { handleBackPressed() }
 
         addPlaylistViewModel.screenState.observe(viewLifecycleOwner) { state ->
             binding.buttonSave.isEnabled = state.isNameValid
@@ -104,7 +103,7 @@ open class AddPlaylistFragment : Fragment() {
         }
     }
 
-    private fun handleBackPressed() {
+    open fun handleBackPressed() {
         if (addPlaylistViewModel.hasUnsavedChanges()) {
             showExitConfirmationDialog()
         } else {
@@ -121,6 +120,11 @@ open class AddPlaylistFragment : Fragment() {
                 dialog.dismiss()
                 findNavController().navigateUp()
             }.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { handleBackPressed() }
     }
 
     override fun onDestroyView() {
