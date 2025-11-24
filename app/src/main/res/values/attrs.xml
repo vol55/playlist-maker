@@ -17,8 +17,12 @@
 
     <attr name="noNetworkImage" format="reference" />
     <attr name="noResultsImage" format="reference" />
-    <attr name="play" format="reference" />
-    <attr name="pause" format="reference" />
+
+    <declare-styleable name="PlaybackButtonView">
+        <attr name="play" format="reference" />
+        <attr name="pause" format="reference" />
+    </declare-styleable>
+
     <attr name="rounded_button" format="reference" />
 
     <attr name="retryButtonBackground" format="color" />

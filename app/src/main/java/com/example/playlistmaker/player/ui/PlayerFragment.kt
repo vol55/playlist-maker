@@ -2,7 +2,6 @@ package com.example.playlistmaker.player.ui
 
 import android.os.Build
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,7 +79,7 @@ class PlayerFragment : Fragment() {
 
         initBottomSheet()
 
-        binding.ibPlayButton.setOnClickListener { playerViewModel.onPlayButtonClicked() }
+        binding.playButton.onPlayPauseToggle = { playerViewModel.onPlayButtonClicked() }
         binding.likeButton.setOnClickListener { playerViewModel.onFavoriteClicked() }
         binding.toolbarButtonBack.setNavigationOnClickListener { findNavController().navigateUp() }
 
@@ -90,26 +89,11 @@ class PlayerFragment : Fragment() {
 
         playerViewModel.screenState.observe(viewLifecycleOwner) { state ->
             when (state.playerState) {
-                PlayerViewModel.PlayerState.DEFAULT -> {
-                    binding.ibPlayButton.isEnabled = false
-                    setPlayIcon()
-                }
-
-                PlayerViewModel.PlayerState.PREPARED -> {
-                    binding.ibPlayButton.isEnabled = true
-                    setPlayIcon()
-                }
-
-                PlayerViewModel.PlayerState.PLAYING -> {
-                    binding.ibPlayButton.isEnabled = true
-                    setPauseIcon()
-                }
-
-                PlayerViewModel.PlayerState.PAUSED -> {
-                    binding.ibPlayButton.isEnabled = true
-                    setPlayIcon()
-                }
+                PlayerViewModel.PlayerState.DEFAULT -> binding.playButton.isEnabled = false
+                else -> binding.playButton.isEnabled = true
             }
+
+            binding.playButton.updateIcon(state.playerState == PlayerViewModel.PlayerState.PLAYING)
 
             binding.tvCurrentTime.text = state.progressTime
             setLikeIcon(state.isFavorite)
@@ -124,7 +108,7 @@ class PlayerFragment : Fragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         playlistsAdapter = PlaylistsAdapter { playlist ->
-            track?.let { currentTrack ->
+            track?.let {
                 playerViewModel.addTrackToPlaylist(playlist.id) { added ->
                     val message: String
                     if (added) {
@@ -162,18 +146,6 @@ class PlayerFragment : Fragment() {
                 )
             }
         }
-    }
-
-    private fun setPlayIcon() {
-        val value = TypedValue()
-        requireContext().theme.resolveAttribute(R.attr.play, value, true)
-        binding.ibPlayButton.setImageResource(value.resourceId)
-    }
-
-    private fun setPauseIcon() {
-        val value = TypedValue()
-        requireContext().theme.resolveAttribute(R.attr.pause, value, true)
-        binding.ibPlayButton.setImageResource(value.resourceId)
     }
 
     private fun setLikeIcon(isFavorite: Boolean) {
