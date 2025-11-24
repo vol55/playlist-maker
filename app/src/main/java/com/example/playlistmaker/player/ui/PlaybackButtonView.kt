@@ -2,7 +2,7 @@ package com.example.playlistmaker.player.ui
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.RectF
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -25,8 +25,7 @@ class PlaybackButtonView @JvmOverloads constructor(
 
     private var isPlaying = false
 
-    private val drawableRect = RectF()
-    private val drawableRectInt = android.graphics.Rect()
+    private val drawableRectInt = Rect()
 
     var onPlayPauseToggle: (() -> Unit)? = null
 
@@ -38,25 +37,21 @@ class PlaybackButtonView @JvmOverloads constructor(
     }
 
     fun updateIcon(playing: Boolean) {
-        isPlaying = playing
-        invalidate()
+        if (isPlaying != playing) {
+            isPlaying = playing
+            invalidate()
+        }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        drawableRect.set(0f, 0f, w.toFloat(), h.toFloat())
+        drawableRectInt.set(0, 0, w, h)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val drawable = if (isPlaying) pauseIcon else playIcon
         drawable?.let {
-            drawableRectInt.set(
-                drawableRect.left.toInt(),
-                drawableRect.top.toInt(),
-                drawableRect.right.toInt(),
-                drawableRect.bottom.toInt()
-            )
             it.bounds = drawableRectInt
             it.draw(canvas)
         }
@@ -66,8 +61,7 @@ class PlaybackButtonView @JvmOverloads constructor(
         when (event.action) {
             MotionEvent.ACTION_DOWN -> return true
             MotionEvent.ACTION_UP -> {
-                isPlaying = !isPlaying
-                invalidate()
+                updateIcon(!isPlaying)
                 onPlayPauseToggle?.invoke()
                 performClick()
                 return true
