@@ -22,12 +22,12 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class MusicService : Service() {
+class MusicService : Service(), MusicServiceInterface {
 
     private val binder = MusicServiceBinder()
 
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.Default())
-    val playerState = _playerState.asStateFlow()
+    override val playerState = _playerState.asStateFlow()
 
     private var songUrl = ""
 
@@ -92,7 +92,7 @@ class MusicService : Service() {
         }
     }
 
-    fun startPlayer() {
+    override fun startPlayer() {
         val startPosition = when (_playerState.value) {
             is PlayerState.Paused -> getCurrentPlayerPosition()
             else -> "00:00"
@@ -103,12 +103,12 @@ class MusicService : Service() {
         startTimer()
     }
 
-    fun showNotification(trackName: String, artistName: String) {
+    override fun showNotification(trackName: String, artistName: String) {
         val notification =
             NotificationCompat.Builder(this, CHANNEL_ID).setContentTitle("Playlist Maker")
-                .setContentText("$artistName - $trackName")
-                .setSmallIcon(R.drawable.library).setOngoing(true)
-                .setCategory(NotificationCompat.CATEGORY_SERVICE).setOnlyAlertOnce(true).build()
+                .setContentText("$artistName - $trackName").setSmallIcon(R.drawable.library)
+                .setOngoing(true).setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setOnlyAlertOnce(true).build()
 
         ServiceCompat.startForeground(
             this, NOTIFICATION_ID, notification, foregroundServiceType()
@@ -116,11 +116,11 @@ class MusicService : Service() {
     }
 
 
-    fun hideNotification() {
+    override fun hideNotification() {
         stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
-    fun pausePlayer() {
+    override fun pausePlayer() {
         mediaPlayer?.pause()
         timerJob?.cancel()
         _playerState.value = PlayerState.Paused(getCurrentPlayerPosition())

@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.library.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.library.domain.api.PlaylistsInteractor
+import com.example.playlistmaker.player.service.MusicServiceInterface
+import com.example.playlistmaker.player.service.PlayerState
 import com.example.playlistmaker.search.ui.TrackUi
 import com.example.playlistmaker.search.ui.toDomain
 import kotlinx.coroutines.launch
@@ -13,11 +15,15 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val track: TrackUi,
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
-    private val playlistsInteractor: PlaylistsInteractor
+    private val playlistsInteractor: PlaylistsInteractor,
+    private var musicServiceInterface: MusicServiceInterface? = null
 ) : ViewModel() {
 
     private val _screenState = MutableLiveData(PlayerScreenState(isFavorite = track.isFavorite))
     val screenState: LiveData<PlayerScreenState> = _screenState
+
+    private val _playerState = MutableLiveData<PlayerState>(PlayerState.Default())
+    val playerState: LiveData<PlayerState> = _playerState
 
     init {
         viewModelScope.launch {
@@ -57,7 +63,47 @@ class PlayerViewModel(
         }
     }
 
+    fun onPlayPauseClicked() {
+        val currentState = _playerState.value
+        when (currentState) {
+            is PlayerState.Prepared, is PlayerState.Paused -> {
+                musicServiceInterface?.startPlayer()
+            }
+
+            is PlayerState.Playing -> {
+                musicServiceInterface?.pausePlayer()
+            }
+
+            else -> {}
+        }
+    }
+
+    fun setPlayerState(state: PlayerState) {
+        _playerState.value = state
+    }
+
     private fun updateState(update: PlayerScreenState.() -> PlayerScreenState) {
         _screenState.value = (_screenState.value ?: PlayerScreenState()).update()
     }
+
+    fun bindMusicService(service: MusicServiceInterface) {
+        musicServiceInterface = service
+    }
+
+    fun showNotification(trackName: String, artistName: String) {
+        musicServiceInterface?.showNotification(trackName, artistName)
+    }
+
+    fun hideNotification() {
+        musicServiceInterface?.hideNotification()
+    }
+
+    fun updateNotification(trackName: String, artistName: String, state: PlayerState) {
+        if (state is PlayerState.Playing) {
+            showNotification(trackName, artistName)
+        } else {
+            hideNotification()
+        }
+    }
 }
+

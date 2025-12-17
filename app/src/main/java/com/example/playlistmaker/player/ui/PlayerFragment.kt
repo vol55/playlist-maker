@@ -56,10 +56,10 @@ class PlayerFragment : Fragment() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicService.MusicServiceBinder
             musicService = binder.getService()
+            playerViewModel.bindMusicService(musicService!!)
             lifecycleScope.launch {
                 musicService?.playerState?.collect {
-                    playerState = it
-                    updateButtonAndProgress()
+                    playerViewModel.setPlayerState(it)
                 }
             }
         }
@@ -126,7 +126,6 @@ class PlayerFragment : Fragment() {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
 
-
         bindMusicService()
 
         if (track == null) {
@@ -149,12 +148,18 @@ class PlayerFragment : Fragment() {
         initBottomSheet()
 
         binding.playButton.onPlayPauseToggle = {
+            playerViewModel.onPlayPauseClicked()
+        }
 
-            if (playerState is PlayerState.Prepared || playerState is PlayerState.Paused) {
-                musicService?.startPlayer()
-            } else {
-                musicService?.pausePlayer()
+        lifecycleScope.launch {
+            musicService?.playerState?.collect {
+                playerViewModel.setPlayerState(it)
             }
+        }
+
+        playerViewModel.playerState.observe(viewLifecycleOwner) { state ->
+            playerState = state
+            updateButtonAndProgress()
         }
 
         binding.likeButton.setOnClickListener { playerViewModel.onFavoriteClicked() }
@@ -220,27 +225,23 @@ class PlayerFragment : Fragment() {
         binding.likeButton.setImageResource(drawableRes)
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        musicService?.hideNotification()
+        playerViewModel.hideNotification()
         unbindMusicService()
     }
 
     override fun onStop() {
         super.onStop()
-
-        if (playerState is PlayerState.Playing) {
-            musicService?.showNotification(
-                track?.trackName ?: "Unknown", track?.artistName ?: "Nameless"
-            )
-        }
+        playerViewModel.updateNotification(
+            track?.trackName ?: "Unknown", track?.artistName ?: "Nameless", playerState
+        )
     }
 
     override fun onResume() {
         super.onResume()
-        musicService?.hideNotification()
+        playerViewModel.hideNotification()
     }
 
     companion object {
