@@ -12,6 +12,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import com.example.playlistmaker.R
+import com.example.playlistmaker.search.ui.TrackUi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,7 +30,7 @@ class MusicService : Service(), MusicServiceInterface {
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.Default())
     override val playerState = _playerState.asStateFlow()
 
-    private var songUrl = ""
+    private var track: TrackUi? = null
 
     private var mediaPlayer: MediaPlayer? = null
 
@@ -68,7 +69,11 @@ class MusicService : Service(), MusicServiceInterface {
     }
 
     override fun onBind(intent: Intent?): IBinder {
-        songUrl = intent?.getStringExtra("song_url") ?: ""
+        track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent?.getParcelableExtra(ARG_TRACK, TrackUi::class.java)
+        } else {
+            @Suppress("DEPRECATION") intent?.getParcelableExtra(ARG_TRACK)
+        }
         initMediaPlayer()
         return binder
     }
@@ -79,13 +84,15 @@ class MusicService : Service(), MusicServiceInterface {
     }
 
     private fun initMediaPlayer() {
-        if (songUrl.isEmpty()) return
+        val previewUrl = track?.previewUrl ?: return
 
-        mediaPlayer?.setDataSource(songUrl)
+        mediaPlayer?.setDataSource(previewUrl)
         mediaPlayer?.prepareAsync()
+
         mediaPlayer?.setOnPreparedListener {
             _playerState.value = PlayerState.Prepared()
         }
+
         mediaPlayer?.setOnCompletionListener {
             _playerState.value = PlayerState.Prepared()
             resetPlayer()
@@ -103,12 +110,14 @@ class MusicService : Service(), MusicServiceInterface {
         startTimer()
     }
 
-    override fun showNotification(trackName: String, artistName: String) {
+    override fun showNotification() {
+        val currentTrack = track ?: return
+
         val notification =
             NotificationCompat.Builder(this, CHANNEL_ID).setContentTitle("Playlist Maker")
-                .setContentText("$artistName - $trackName").setSmallIcon(R.drawable.library)
-                .setOngoing(true).setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .setOnlyAlertOnce(true).build()
+                .setContentText("${currentTrack.artistName} - ${currentTrack.trackName}")
+                .setSmallIcon(R.drawable.library).setOngoing(true)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE).setOnlyAlertOnce(true).build()
 
         ServiceCompat.startForeground(
             this, NOTIFICATION_ID, notification, foregroundServiceType()
@@ -153,6 +162,7 @@ class MusicService : Service(), MusicServiceInterface {
     }
 
     companion object {
+        const val ARG_TRACK = "track"
         private const val DELAY = 200L
         private const val CHANNEL_ID = "music_service_channel"
         private const val NOTIFICATION_ID = 100

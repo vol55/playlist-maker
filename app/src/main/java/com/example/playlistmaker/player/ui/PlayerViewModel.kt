@@ -90,17 +90,17 @@ class PlayerViewModel(
         musicServiceInterface = service
     }
 
-    fun showNotification(trackName: String, artistName: String) {
-        musicServiceInterface?.showNotification(trackName, artistName)
+    fun showNotification() {
+        musicServiceInterface?.showNotification()
     }
 
     fun hideNotification() {
         musicServiceInterface?.hideNotification()
     }
 
-    fun updateNotification(trackName: String, artistName: String, state: PlayerState) {
+    fun updateNotification(state: PlayerState) {
         if (state is PlayerState.Playing) {
-            showNotification(trackName, artistName)
+            showNotification()
         } else {
             hideNotification()
         }

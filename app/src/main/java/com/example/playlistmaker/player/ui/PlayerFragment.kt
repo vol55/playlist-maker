@@ -79,11 +79,11 @@ class PlayerFragment : Fragment() {
 
     private fun bindMusicService() {
         val intent = Intent(requireContext(), MusicService::class.java).apply {
-            putExtra("song_url", track?.previewUrl)
+            putExtra(MusicService.ARG_TRACK, track)
         }
-
         requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
+
 
     private fun unbindMusicService() {
         requireContext().unbindService(serviceConnection)
@@ -234,9 +234,7 @@ class PlayerFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        playerViewModel.updateNotification(
-            track?.trackName ?: "Unknown", track?.artistName ?: "Nameless", playerState
-        )
+        playerViewModel.updateNotification(playerState)
     }
 
     override fun onResume() {

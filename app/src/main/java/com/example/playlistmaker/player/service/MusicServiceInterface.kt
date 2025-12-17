@@ -6,6 +6,6 @@ interface MusicServiceInterface {
     val playerState: StateFlow<PlayerState>
     fun startPlayer()
     fun pausePlayer()
-    fun showNotification(trackName: String, artistName: String)
+    fun showNotification()
     fun hideNotification()
 }
