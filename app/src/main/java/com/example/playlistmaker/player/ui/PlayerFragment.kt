@@ -1,5 +1,6 @@
 package com.example.playlistmaker.player.ui
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -11,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -101,6 +104,15 @@ class PlayerFragment : Fragment() {
         return binding.root
     }
 
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (!granted) {
+                Toast.makeText(
+                    requireContext(), "Воспроизведение в фоне недоступно", Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -109,6 +121,11 @@ class PlayerFragment : Fragment() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
 
         bindMusicService()
 
@@ -132,6 +149,7 @@ class PlayerFragment : Fragment() {
         initBottomSheet()
 
         binding.playButton.onPlayPauseToggle = {
+
             if (playerState is PlayerState.Prepared || playerState is PlayerState.Paused) {
                 musicService?.startPlayer()
             } else {
@@ -206,7 +224,23 @@ class PlayerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        musicService?.hideNotification()
         unbindMusicService()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (playerState is PlayerState.Playing) {
+            musicService?.showNotification(
+                track?.trackName ?: "Unknown", track?.artistName ?: "Nameless"
+            )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        musicService?.hideNotification()
     }
 
     companion object {
