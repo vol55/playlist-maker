@@ -61,7 +61,6 @@ class PlaybackButtonView @JvmOverloads constructor(
         when (event.action) {
             MotionEvent.ACTION_DOWN -> return true
             MotionEvent.ACTION_UP -> {
-                updateIcon(!isPlaying)
                 onPlayPauseToggle?.invoke()
                 performClick()
                 return true
