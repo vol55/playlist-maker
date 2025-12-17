@@ -50,7 +50,6 @@ class PlayerFragment : Fragment() {
     }
 
     private var musicService: MusicService? = null
-    private var playerState: PlayerState = PlayerState.Default()
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -67,14 +66,6 @@ class PlayerFragment : Fragment() {
         override fun onServiceDisconnected(name: ComponentName?) {
             musicService = null
         }
-    }
-
-    private fun updateButtonAndProgress() {
-        binding.playButton.apply {
-            isEnabled = playerState.buttonState
-            updateIcon(playerState is PlayerState.Playing)
-        }
-        binding.tvCurrentTime.text = playerState.progress
     }
 
     private fun bindMusicService() {
@@ -151,27 +142,22 @@ class PlayerFragment : Fragment() {
             playerViewModel.onPlayPauseClicked()
         }
 
-        lifecycleScope.launch {
-            musicService?.playerState?.collect {
-                playerViewModel.setPlayerState(it)
-            }
-        }
-
-        playerViewModel.playerState.observe(viewLifecycleOwner) { state ->
-            playerState = state
-            updateButtonAndProgress()
-        }
-
         binding.likeButton.setOnClickListener { playerViewModel.onFavoriteClicked() }
         binding.toolbarButtonBack.setNavigationOnClickListener { findNavController().navigateUp() }
-
         binding.leftButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
 
         playerViewModel.screenState.observe(viewLifecycleOwner) { state ->
-            playlistsAdapter.updatePlaylists(state.playlists)
+            binding.playButton.apply {
+                isEnabled = state.playerState.buttonState
+                updateIcon(state.playerState is PlayerState.Playing)
+            }
+            binding.tvCurrentTime.text = state.playerState.progress
+
             setLikeIcon(state.isFavorite)
+
+            playlistsAdapter.updatePlaylists(state.playlists)
         }
     }
 
@@ -182,12 +168,11 @@ class PlayerFragment : Fragment() {
         playlistsAdapter = PlaylistsAdapter { playlist ->
             track?.let {
                 playerViewModel.addTrackToPlaylist(playlist.id) { added ->
-                    val message: String
-                    if (added) {
-                        message = getString(R.string.player_track_added, playlist.title)
+                    val message = if (added) {
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                        getString(R.string.player_track_added, playlist.title)
                     } else {
-                        message = getString(R.string.player_track_exists, playlist.title)
+                        getString(R.string.player_track_exists, playlist.title)
                     }
                     showCustomToast(requireContext(), message)
                 }
@@ -234,7 +219,9 @@ class PlayerFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        playerViewModel.updateNotification(playerState)
+        playerViewModel.screenState.value?.playerState?.let {
+            playerViewModel.updateNotification(it)
+        }
     }
 
     override fun onResume() {

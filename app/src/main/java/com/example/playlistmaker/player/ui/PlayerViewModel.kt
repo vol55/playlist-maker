@@ -19,11 +19,12 @@ class PlayerViewModel(
     private var musicServiceInterface: MusicServiceInterface? = null
 ) : ViewModel() {
 
-    private val _screenState = MutableLiveData(PlayerScreenState(isFavorite = track.isFavorite))
+    private val _screenState = MutableLiveData(
+        PlayerScreenState(
+            isFavorite = track.isFavorite, playerState = PlayerState.Default()
+        )
+    )
     val screenState: LiveData<PlayerScreenState> = _screenState
-
-    private val _playerState = MutableLiveData<PlayerState>(PlayerState.Default())
-    val playerState: LiveData<PlayerState> = _playerState
 
     init {
         viewModelScope.launch {
@@ -64,22 +65,16 @@ class PlayerViewModel(
     }
 
     fun onPlayPauseClicked() {
-        val currentState = _playerState.value
+        val currentState = _screenState.value?.playerState
         when (currentState) {
-            is PlayerState.Prepared, is PlayerState.Paused -> {
-                musicServiceInterface?.startPlayer()
-            }
-
-            is PlayerState.Playing -> {
-                musicServiceInterface?.pausePlayer()
-            }
-
+            is PlayerState.Prepared, is PlayerState.Paused -> musicServiceInterface?.startPlayer()
+            is PlayerState.Playing -> musicServiceInterface?.pausePlayer()
             else -> {}
         }
     }
 
     fun setPlayerState(state: PlayerState) {
-        _playerState.value = state
+        updateState { copy(playerState = state) }
     }
 
     private fun updateState(update: PlayerScreenState.() -> PlayerScreenState) {
@@ -106,4 +101,3 @@ class PlayerViewModel(
         }
     }
 }
-
