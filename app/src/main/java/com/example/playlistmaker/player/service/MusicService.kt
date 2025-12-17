@@ -86,8 +86,15 @@ class MusicService : Service(), MusicServiceInterface {
     private fun initMediaPlayer() {
         val previewUrl = track?.previewUrl ?: return
 
-        mediaPlayer?.setDataSource(previewUrl)
-        mediaPlayer?.prepareAsync()
+        try {
+            mediaPlayer?.setDataSource(previewUrl)
+            mediaPlayer?.prepareAsync()
+
+        } catch (_: Exception) {
+            releasePlayer()
+            _playerState.value = PlayerState.Default()
+            return
+        }
 
         mediaPlayer?.setOnPreparedListener {
             _playerState.value = PlayerState.Prepared()
