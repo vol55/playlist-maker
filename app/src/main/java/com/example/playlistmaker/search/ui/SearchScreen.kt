@@ -71,9 +71,9 @@ fun SearchScreen(
         )
 
         when (state) {
-            is SearchScreenState.Loading -> LoadingView()
-            is SearchScreenState.NoResults -> NoResultsView()
-            is SearchScreenState.NotConnected -> NoNetworkView(
+            is SearchScreenState.Loading -> Loading()
+            is SearchScreenState.NoResults -> NoResults()
+            is SearchScreenState.NotConnected -> NoNetwork(
                 onRetryClick = onRetry, modifier = Modifier.fillMaxSize()
             )
 
@@ -87,7 +87,7 @@ fun SearchScreen(
 
             is SearchScreenState.History -> {
                 if (state.history.isNotEmpty()) {
-                    SearchHistoryView(
+                    SearchHistory(
                         history = state.history,
                         onTrackClick = onTrackClick,
                         onClearHistory = onClearHistory,
@@ -102,7 +102,7 @@ fun SearchScreen(
 }
 
 @Composable
-fun SearchHistoryView(
+fun SearchHistory(
     history: List<Track>,
     onTrackClick: (Track) -> Unit,
     onClearHistory: () -> Unit,
@@ -145,7 +145,7 @@ fun SearchHistoryView(
 }
 
 @Composable
-fun NoNetworkView(
+fun NoNetwork(
     onRetryClick: () -> Unit, modifier: Modifier = Modifier
 ) {
     val isDark = isSystemInDarkTheme()
@@ -193,7 +193,7 @@ fun NoNetworkView(
 }
 
 @Composable
-fun NoResultsView(
+fun NoResults(
     modifier: Modifier = Modifier
 ) {
     val isDark = isSystemInDarkTheme()
@@ -226,7 +226,7 @@ fun NoResultsView(
 }
 
 @Composable
-private fun LoadingView() {
+private fun Loading() {
     Box(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
     ) {
