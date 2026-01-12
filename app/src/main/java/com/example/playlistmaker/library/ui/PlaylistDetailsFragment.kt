@@ -55,20 +55,6 @@ class PlaylistDetailsFragment : Fragment() {
             insets
         }
 
-//        val bottomSheet = binding.tracksBottomSheet
-//        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-//
-//        binding.buttonShare.post {
-//            val location = IntArray(2)
-//            binding.buttonShare.getLocationOnScreen(location)
-//            val buttonBottom = location[1] + (binding.buttonShare.height * 2)
-//
-//            val screenHeight = resources.displayMetrics.heightPixels
-//            val desiredPeekHeight = screenHeight - buttonBottom
-//
-//            bottomSheetBehavior.peekHeight = desiredPeekHeight
-//            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-//        }
         setTracksBottomSheet()
 
         val playlistBottomSheetBinding = binding.playlistBottomsheet
@@ -82,7 +68,6 @@ class PlaylistDetailsFragment : Fragment() {
             findNavController().navigate(
                 R.id.action_playlistDetailsFragment_to_playerFragment, args
             )
-
         }
 
         onTrackLongClick = { track ->
@@ -145,7 +130,6 @@ class PlaylistDetailsFragment : Fragment() {
         binding.buttonShare.setOnClickListener { onShareClick() }
 
         binding.buttonOptions.setOnClickListener {
-//            toggleOptionsBottomSheet()
             setOptionsBottomSheet()
         }
 

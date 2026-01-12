@@ -1,77 +1,39 @@
 package com.example.playlistmaker.library.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
 
     private val playlistsViewModel: PlaylistsViewModel by viewModel()
-    private var _binding: FragmentPlaylistsBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var playlistsAdapter: PlaylistsAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: android.view.LayoutInflater,
+        container: android.view.ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        playlistsAdapter = PlaylistsAdapter(mutableListOf()) { playlist ->
-            findNavController().navigate(
-                R.id.action_libraryFragment_to_playlistDetailsFragment, createArgs(playlist.id)
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
-        }
-        binding.playlistsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.playlistsRecyclerView.adapter = playlistsAdapter
 
-        playlistsViewModel.screenState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is PlaylistsScreenState.Content -> {
-                    binding.playlistsRecyclerView.visibility = View.VISIBLE
-                    binding.noPlaylistsImage.visibility = View.GONE
-                    binding.noPlaylistsText.visibility = View.GONE
+            setContent {
+                val state by playlistsViewModel.screenState.observeAsState(PlaylistsScreenState.Empty)
 
-                    playlistsAdapter.playlists.clear()
-                    playlistsAdapter.playlists.addAll(state.playlists)
-                    playlistsAdapter.notifyDataSetChanged()
-                }
-
-                is PlaylistsScreenState.Empty -> {
-                    binding.playlistsRecyclerView.visibility = View.GONE
-                    binding.noPlaylistsImage.visibility = View.VISIBLE
-                    binding.noPlaylistsText.visibility = View.VISIBLE
+                com.example.playlistmaker.root.ui.MyAppTheme {
+                    PlaylistsScreen(
+                        state = state,
+                        onPlaylistClick = {},
+                        onNewPlaylistClick = {},
+                    )
                 }
             }
         }
-
-        binding.addPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_libraryFragment_to_addPlaylistFragment)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    companion object {
-        fun newInstance() = PlaylistsFragment()
-
-        private const val ARG_PLAYLIST_ID = "playlist_id"
-        fun createArgs(playlistId: Int): Bundle = bundleOf(ARG_PLAYLIST_ID to playlistId)
     }
 }
