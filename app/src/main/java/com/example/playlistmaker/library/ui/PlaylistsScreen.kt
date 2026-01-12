@@ -47,14 +47,37 @@ fun PlaylistsScreen(
     onNewPlaylistClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    when (state) {
-        PlaylistsScreenState.Empty -> EmptyPlaylists(
-            onNewPlaylistClick = onNewPlaylistClick, modifier = modifier
-        )
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        Button(
+            onClick = onNewPlaylistClick,
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .padding(top = 24.dp, bottom = 8.dp),
+            shape = RoundedCornerShape(54.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.onSurface
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.new_playlist),
+                color = MaterialTheme.colorScheme.background,
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 14.sp)
+            )
+        }
 
-        is PlaylistsScreenState.Content -> PlaylistsGrid(
-            playlists = state.playlists, onPlaylistClick = onPlaylistClick, modifier = modifier
-        )
+        when (state) {
+            PlaylistsScreenState.Empty -> EmptyPlaylists(
+                onNewPlaylistClick = onNewPlaylistClick, modifier = modifier
+            )
+
+            is PlaylistsScreenState.Content -> PlaylistsGrid(
+                playlists = state.playlists, onPlaylistClick = onPlaylistClick, modifier = modifier
+            )
+        }
     }
 }
 
@@ -151,20 +174,6 @@ fun EmptyPlaylists(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Button(
-            onClick = onNewPlaylistClick,
-            modifier = Modifier.padding(top = 24.dp, bottom = 8.dp),
-            shape = RoundedCornerShape(54.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.onSurface
-            )
-        ) {
-            Text(
-                text = stringResource(R.string.new_playlist),
-                color = MaterialTheme.colorScheme.background,
-                style = MaterialTheme.typography.titleMedium.copy(fontSize = 14.sp)
-            )
-        }
 
         Image(
             painter = painterResource(imageRes),
