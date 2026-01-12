@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.root.ui.appColors
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.collections.immutable.toImmutableList
 
 
 @Composable
@@ -78,7 +79,7 @@ fun SearchScreen(
 
             is SearchScreenState.Results -> {
                 TrackLazyColumn(
-                    tracks = state.tracks,
+                    tracks = state.tracks.toImmutableList(),
                     onTrackClick = onTrackClick,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -120,7 +121,7 @@ fun SearchHistoryView(
         )
 
         TrackLazyColumn(
-            tracks = history,
+            tracks = history.toImmutableList(),
             onTrackClick = onTrackClick,
             modifier = Modifier.padding(vertical = 20.dp)
         )

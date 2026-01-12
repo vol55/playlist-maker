@@ -22,11 +22,12 @@ import androidx.compose.ui.unit.sp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackLazyColumn
+import kotlinx.collections.immutable.ImmutableList
 
 
 @Composable
 fun FavoritesScreen(
-    tracks: List<Track>, onTrackClick: (Track) -> Unit, modifier: Modifier = Modifier
+    tracks: ImmutableList<Track>, onTrackClick: (Track) -> Unit, modifier: Modifier = Modifier
 ) {
     if (tracks.isEmpty()) {
         EmptyFavorites(modifier = modifier.fillMaxSize())

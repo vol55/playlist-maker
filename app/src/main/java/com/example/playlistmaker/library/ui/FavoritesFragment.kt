@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.root.ui.MyAppTheme
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
@@ -33,7 +34,7 @@ class FavoritesFragment : Fragment() {
 
                 MyAppTheme {
                     FavoritesScreen(
-                        tracks = tracks, onTrackClick = {}, modifier = Modifier
+                        tracks = tracks.toImmutableList(), onTrackClick = {}, modifier = Modifier
                     )
                 }
             }

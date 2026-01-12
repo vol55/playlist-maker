@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -91,7 +92,7 @@ fun LibraryScreen(
         ) { page ->
             when (page) {
                 0 -> FavoritesScreen(
-                    tracks = favouriteTracks, onTrackClick = onTrackClick
+                    tracks = favouriteTracks.toImmutableList(), onTrackClick = onTrackClick
                 )
 
                 1 -> PlaylistsScreen(

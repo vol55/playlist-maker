@@ -32,10 +32,11 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.example.playlistmaker.R
 import com.example.playlistmaker.root.ui.appColors
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun TrackLazyColumn(
-    tracks: List<Track>, onTrackClick: (Track) -> Unit, modifier: Modifier = Modifier
+    tracks: ImmutableList<Track>, onTrackClick: (Track) -> Unit, modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier, contentPadding = PaddingValues(top = 8.dp)

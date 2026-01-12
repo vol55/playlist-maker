@@ -91,4 +91,5 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.androidx.compose.runtime.livedata)
     implementation("com.github.bumptech.glide:compose:1.0.0-beta08")
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
 }
