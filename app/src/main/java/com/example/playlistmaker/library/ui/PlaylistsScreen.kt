@@ -178,7 +178,7 @@ fun EmptyPlaylists(
         Text(
             text = stringResource(R.string.no_playlists_created),
             modifier = Modifier.padding(top = 16.dp),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 19.sp),
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )

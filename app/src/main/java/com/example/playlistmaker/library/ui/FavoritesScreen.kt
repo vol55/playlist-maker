@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.TrackLazyColumn
@@ -63,7 +64,7 @@ fun EmptyFavorites(
         Text(
             text = stringResource(R.string.favorites_empty),
             modifier = Modifier.padding(top = 16.dp),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 19.sp),
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )

@@ -42,7 +42,7 @@ val AppFontFamily = FontFamily(
 )
 private val AppTypography = Typography(
     bodyMedium = TextStyle(
-        fontFamily = AppFontFamily, fontWeight = FontWeight.Normal, fontSize = 16.sp
+        fontFamily = AppFontFamily, fontWeight = FontWeight.Medium, fontSize = 16.sp
     ),
     titleMedium = TextStyle(
         fontFamily = AppFontFamily, fontWeight = FontWeight.Medium, fontSize = 22.sp
