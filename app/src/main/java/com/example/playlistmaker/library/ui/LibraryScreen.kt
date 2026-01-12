@@ -52,6 +52,13 @@ fun LibraryScreen(
                 WindowInsets.systemBars.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
             )
     ) {
+        Text(
+            text = stringResource(R.string.library),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+        )
+
         TabRow(
             selectedTabIndex = pagerState.currentPage,
             modifier = Modifier.padding(horizontal = 16.dp),
