@@ -21,8 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.playlistmaker.R
 import com.example.playlistmaker.library.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
@@ -66,11 +66,11 @@ fun LibraryScreen(
             contentColor = MaterialTheme.colorScheme.onBackground,
             divider = {},
             indicator = { tabPositions ->
-                val fraction = 0.8f
                 TabRowDefaults.PrimaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                     color = MaterialTheme.colorScheme.onBackground,
-                    width = tabPositions[pagerState.currentPage].width * fraction
+                    width = 148.dp,
+                    height = 2.dp
                 )
             }) {
             tabs.forEachIndexed { index, title ->
@@ -80,7 +80,7 @@ fun LibraryScreen(
                     text = {
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
+                            style = MaterialTheme.typography.titleMedium.copy(fontSize = 14.sp)
                         )
                     })
             }
