@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
@@ -32,7 +33,7 @@ class FavoritesFragment : Fragment() {
 
                 MyAppTheme {
                     FavoritesScreen(
-                        tracks = tracks, onTrackClick = {}, modifier = androidx.compose.ui.Modifier
+                        tracks = tracks, onTrackClick = {}, modifier = Modifier
                     )
                 }
             }
