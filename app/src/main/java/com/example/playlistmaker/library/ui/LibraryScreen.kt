@@ -18,6 +18,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,9 +40,16 @@ fun LibraryScreen(
     onAddPlaylistClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val tabs = listOf(
-        stringResource(R.string.favorite_tracks), stringResource(R.string.playlists)
-    )
+    val favoritesTitle = stringResource(R.string.favorite_tracks)
+    val playlistsTitle = stringResource(R.string.playlists)
+
+    val tabs = remember(favoritesTitle, playlistsTitle) {
+        listOf(favoritesTitle, playlistsTitle)
+    }
+
+    val favouriteTracksImmutable = remember(favouriteTracks) {
+        favouriteTracks.toImmutableList()
+    }
 
     val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
     val scope = rememberCoroutineScope()
@@ -92,7 +100,7 @@ fun LibraryScreen(
         ) { page ->
             when (page) {
                 0 -> FavoritesScreen(
-                    tracks = favouriteTracks.toImmutableList(), onTrackClick = onTrackClick
+                    tracks = favouriteTracksImmutable, onTrackClick = onTrackClick
                 )
 
                 1 -> PlaylistsScreen(
