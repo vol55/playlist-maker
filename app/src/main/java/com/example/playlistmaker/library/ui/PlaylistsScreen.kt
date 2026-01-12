@@ -107,6 +107,7 @@ fun PlaylistItem(
     val trackCountText = pluralStringResource(
         id = R.plurals.track_count, count = playlist.trackCount, playlist.trackCount
     )
+    val cover = stringResource(R.string.cover)
 
     Column(
         modifier = modifier
@@ -126,7 +127,7 @@ fun PlaylistItem(
                 factory = { ctx ->
                     ImageView(ctx).apply {
                         scaleType = ImageView.ScaleType.CENTER_CROP
-                        contentDescription = "cover"
+                        contentDescription = cover
                     }
                 },
                 update = { imageView ->
