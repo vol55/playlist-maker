@@ -2,7 +2,7 @@
 
 Android-приложение для поиска музыки, прослушивания превью, сохранения любимых треков и создания собственных плейлистов.
 
-<img src="screenshot.png" width="400" alt="Playlist Maker — screenshot">
+<img src="screenshot.png" width="300" alt="Playlist Maker — screenshot">
 
 ## Возможности
 
